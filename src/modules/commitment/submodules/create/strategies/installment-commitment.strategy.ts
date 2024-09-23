@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-
 import { CommitmentStrategy } from '../interfaces/create-strategy.interface';
 import { CreateCommitmentDto } from 'src/modules/commitment/dto/create-commitment.dto';
 import { CommitmentRepository } from 'src/database/repositories/commitment.repository';
 import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
+import { endOfMonth, isValid, set } from 'date-fns';
 
 @Injectable()
 export class InstallmentCommitmentStrategy implements CommitmentStrategy {
@@ -13,7 +13,6 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
   ) { }
 
   async process(createCommitmentDto: CreateCommitmentDto) {
-    // Criação do compromisso no banco de dados
     const commitment = await this.commitmentRepository.insertOne({
       type: createCommitmentDto.type,
       description: createCommitmentDto.description,
@@ -26,7 +25,6 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
       subcategory: createCommitmentDto.subcategory,
     });
 
-    // Gerar as ocorrências para as parcelas restantes
     const occurrences = this.generateOccurrences(
       commitment._id,
       createCommitmentDto.start_date,
@@ -35,7 +33,6 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
       createCommitmentDto.amount,
     );
 
-    // Salvar as ocorrências no banco de dados
     await this.occurrenceRepository.insertMany(occurrences);
 
     return commitment;
@@ -52,24 +49,25 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
 
     const startDateParts = startDateString.split('-');
     const startDate = new Date(Date.UTC(
-      parseInt(startDateParts[0]), // ano
-      parseInt(startDateParts[1]) - 1, // mês (0-11)
-      parseInt(startDateParts[2]) // dia
+      parseInt(startDateParts[0]),
+      parseInt(startDateParts[1]) - 1,
+      parseInt(startDateParts[2])
     ));
 
-    const dayOfMonth = startDate.getUTCDate();
     const baseInstallmentAmount = Math.floor((totalAmount / totalInstallments) * 100) / 100;
     const totalCalculated = baseInstallmentAmount * totalInstallments;
     const adjustment = Math.round((totalAmount - totalCalculated) * 100) / 100;
 
     for (let i = 0; i < totalInstallments; i++) {
-      const occurrenceDate = new Date(startDate.getTime());
-      occurrenceDate.setUTCMonth(startDate.getUTCMonth() + i);
-      occurrenceDate.setUTCDate(dayOfMonth);
+      let occurrenceDate = new Date(startDate.getTime());
+      occurrenceDate.setUTCMonth(startDate.getUTCMonth() + i); // Incrementa o mês
 
-      if (occurrenceDate.getUTCMonth() !== (startDate.getUTCMonth() + i) % 12) {
-        occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1);
-        occurrenceDate.setUTCDate(dayOfMonth);
+      // Se o dia não for válido, ajustar para o último dia do mês
+      if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
+        occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1); // Avança para o próximo mês
+        occurrenceDate.setUTCDate(0); // Ajusta para o último dia do mês anterior
+      } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
+        occurrenceDate.setUTCDate(0); // Ajusta para o último dia do mês
       }
 
       const formattedDate = occurrenceDate.toISOString().split('T')[0];
@@ -82,6 +80,8 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
         status: 'pendente',
       });
     }
+
+    console.log("occurrences", occurrences);
 
     return occurrences;
   }
