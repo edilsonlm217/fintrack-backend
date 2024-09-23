@@ -6,9 +6,9 @@ import { OccurrenceRepository } from 'src/database/repositories/occurrence.repos
 
 export interface Occurrence {
   commitment_id: string;
-  due_date: string;  // Formato ISO (YYYY-MM-DD)
+  due_date: string; // Formato ISO (YYYY-MM-DD)
   amount: number;
-  status: 'pendente' | 'paga' | 'atrasada';  // Valores possíveis
+  status: 'pendente' | 'paga' | 'atrasada'; // Valores possíveis
 }
 
 @Injectable()
@@ -52,71 +52,67 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
     totalAmount: number
   ): Occurrence[] {
     const occurrences: Occurrence[] = [];
+    const startDate = this.parseStartDate(startDateString);
+    const baseInstallmentAmount = this.calculateBaseInstallmentAmount(totalAmount, totalInstallments);
+    const adjustmentAmount = this.calculateAdjustmentAmount(totalAmount, baseInstallmentAmount, totalInstallments);
 
-    const startDateParts = startDateString.split('-');
-    const startDate = new Date(Date.UTC(
-      parseInt(startDateParts[0]),
-      parseInt(startDateParts[1]) - 1,
-      parseInt(startDateParts[2])
-    ));
+    const remainingInstallments = this.calculateRemainingInstallments(currentInstallment, totalInstallments);
 
-    const baseInstallmentAmount = Math.floor((totalAmount / totalInstallments) * 100) / 100;
-    const totalCalculated = baseInstallmentAmount * totalInstallments;
-    const adjustment = Math.round((totalAmount - totalCalculated) * 100) / 100;
+    for (let i = 0; i < remainingInstallments; i++) {
+      const occurrenceDate = this.calculateOccurrenceDate(startDate, i);
+      const installmentAmount = this.calculateInstallmentAmount(i, remainingInstallments, baseInstallmentAmount, adjustmentAmount);
 
-    // Lógica para quando currentInstallment é igual a 1
-    if (currentInstallment === 1) {
-      for (let i = 0; i < totalInstallments; i++) {
-        let occurrenceDate = new Date(startDate.getTime());
-        occurrenceDate.setUTCMonth(startDate.getUTCMonth() + i); // Incrementa o mês
-
-        // Ajuste para o último dia do mês
-        if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
-          occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1);
-          occurrenceDate.setUTCDate(0);
-        } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
-          occurrenceDate.setUTCDate(0);
-        }
-
-        const formattedDate = occurrenceDate.toISOString().split('T')[0];
-        const installmentAmount = (i === totalInstallments - 1) ? baseInstallmentAmount + adjustment : baseInstallmentAmount;
-
-        occurrences.push({
-          commitment_id: commitmentId,
-          due_date: formattedDate,
-          amount: installmentAmount,
-          status: 'pendente',
-        });
-      }
-    } else {
-      // Lógica para quando currentInstallment é maior que 1
-      const remainingInstallments = totalInstallments - currentInstallment + 1;
-
-      for (let i = 0; i < remainingInstallments; i++) {
-        let occurrenceDate = new Date(startDate.getTime());
-        occurrenceDate.setUTCMonth(startDate.getUTCMonth() + i); // Incrementa o mês
-
-        // Ajuste para o último dia do mês
-        if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
-          occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1);
-          occurrenceDate.setUTCDate(0);
-        } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
-          occurrenceDate.setUTCDate(0);
-        }
-
-        const formattedDate = occurrenceDate.toISOString().split('T')[0];
-        const installmentAmount = (i === remainingInstallments - 1) ? baseInstallmentAmount + adjustment : baseInstallmentAmount;
-
-        occurrences.push({
-          commitment_id: commitmentId,
-          due_date: formattedDate,
-          amount: installmentAmount,
-          status: 'pendente',
-        });
-      }
+      occurrences.push({
+        commitment_id: commitmentId,
+        due_date: occurrenceDate.toISOString().split('T')[0],
+        amount: installmentAmount,
+        status: 'pendente',
+      });
     }
 
     console.log("occurrences", occurrences);
     return occurrences;
+  }
+
+  private parseStartDate(startDateString: string): Date {
+    const [year, month, day] = startDateString.split('-').map(Number);
+    return new Date(Date.UTC(year, month - 1, day));
+  }
+
+  private calculateBaseInstallmentAmount(totalAmount: number, totalInstallments: number): number {
+    return Math.floor((totalAmount / totalInstallments) * 100) / 100;
+  }
+
+  private calculateAdjustmentAmount(totalAmount: number, baseInstallmentAmount: number, totalInstallments: number): number {
+    const totalCalculated = baseInstallmentAmount * totalInstallments;
+    return Math.round((totalAmount - totalCalculated) * 100) / 100;
+  }
+
+  private calculateRemainingInstallments(currentInstallment: number, totalInstallments: number): number {
+    return totalInstallments - currentInstallment + 1;
+  }
+
+  private calculateOccurrenceDate(startDate: Date, installmentIndex: number): Date {
+    const occurrenceDate = new Date(startDate.getTime());
+    occurrenceDate.setUTCMonth(startDate.getUTCMonth() + installmentIndex); // Incrementa o mês
+
+    // Ajuste para o último dia do mês
+    if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
+      occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1);
+      occurrenceDate.setUTCDate(0); // Último dia do mês anterior
+    } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
+      occurrenceDate.setUTCDate(0); // Último dia do mês anterior
+    }
+
+    return occurrenceDate;
+  }
+
+  private calculateInstallmentAmount(
+    index: number,
+    remainingInstallments: number,
+    baseInstallmentAmount: number,
+    adjustmentAmount: number
+  ): number {
+    return (index === remainingInstallments - 1) ? baseInstallmentAmount + adjustmentAmount : baseInstallmentAmount;
   }
 }
