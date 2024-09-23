@@ -3,7 +3,6 @@ import { CommitmentStrategy } from '../interfaces/create-strategy.interface';
 import { CreateCommitmentDto } from 'src/modules/commitment/dto/create-commitment.dto';
 import { CommitmentRepository } from 'src/database/repositories/commitment.repository';
 import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
-import { endOfMonth, isValid, set } from 'date-fns';
 
 @Injectable()
 export class InstallmentCommitmentStrategy implements CommitmentStrategy {
@@ -58,31 +57,59 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
     const totalCalculated = baseInstallmentAmount * totalInstallments;
     const adjustment = Math.round((totalAmount - totalCalculated) * 100) / 100;
 
-    for (let i = 0; i < totalInstallments; i++) {
-      let occurrenceDate = new Date(startDate.getTime());
-      occurrenceDate.setUTCMonth(startDate.getUTCMonth() + i); // Incrementa o mês
+    // Lógica para quando currentInstallment é igual a 1
+    if (currentInstallment === 1) {
+      for (let i = 0; i < totalInstallments; i++) {
+        let occurrenceDate = new Date(startDate.getTime());
+        occurrenceDate.setUTCMonth(startDate.getUTCMonth() + i); // Incrementa o mês
 
-      // Se o dia não for válido, ajustar para o último dia do mês
-      if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
-        occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1); // Avança para o próximo mês
-        occurrenceDate.setUTCDate(0); // Ajusta para o último dia do mês anterior
-      } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
-        occurrenceDate.setUTCDate(0); // Ajusta para o último dia do mês
+        // Ajuste para o último dia do mês
+        if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
+          occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1);
+          occurrenceDate.setUTCDate(0);
+        } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
+          occurrenceDate.setUTCDate(0);
+        }
+
+        const formattedDate = occurrenceDate.toISOString().split('T')[0];
+        const installmentAmount = (i === totalInstallments - 1) ? baseInstallmentAmount + adjustment : baseInstallmentAmount;
+
+        occurrences.push({
+          commitment_id: commitmentId,
+          due_date: formattedDate,
+          amount: installmentAmount,
+          status: 'pendente',
+        });
       }
+    } else {
+      // Lógica para quando currentInstallment é maior que 1
+      const remainingInstallments = totalInstallments - currentInstallment + 1;
 
-      const formattedDate = occurrenceDate.toISOString().split('T')[0];
-      const installmentAmount = (i === totalInstallments - 1) ? baseInstallmentAmount + adjustment : baseInstallmentAmount;
+      for (let i = 0; i < remainingInstallments; i++) {
+        let occurrenceDate = new Date(startDate.getTime());
+        occurrenceDate.setUTCMonth(startDate.getUTCMonth() + i); // Incrementa o mês
 
-      occurrences.push({
-        commitment_id: commitmentId,
-        due_date: formattedDate,
-        amount: installmentAmount,
-        status: 'pendente',
-      });
+        // Ajuste para o último dia do mês
+        if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
+          occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1);
+          occurrenceDate.setUTCDate(0);
+        } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
+          occurrenceDate.setUTCDate(0);
+        }
+
+        const formattedDate = occurrenceDate.toISOString().split('T')[0];
+        const installmentAmount = (i === remainingInstallments - 1) ? baseInstallmentAmount + adjustment : baseInstallmentAmount;
+
+        occurrences.push({
+          commitment_id: commitmentId,
+          due_date: formattedDate,
+          amount: installmentAmount,
+          status: 'pendente',
+        });
+      }
     }
 
     console.log("occurrences", occurrences);
-
     return occurrences;
   }
 }
