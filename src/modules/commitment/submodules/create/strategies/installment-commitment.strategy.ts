@@ -4,6 +4,13 @@ import { CreateCommitmentDto } from 'src/modules/commitment/dto/create-commitmen
 import { CommitmentRepository } from 'src/database/repositories/commitment.repository';
 import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
 
+export interface Occurrence {
+  commitment_id: string;
+  due_date: string;  // Formato ISO (YYYY-MM-DD)
+  amount: number;
+  status: 'pendente' | 'paga' | 'atrasada';  // Valores possíveis
+}
+
 @Injectable()
 export class InstallmentCommitmentStrategy implements CommitmentStrategy {
   constructor(
@@ -43,8 +50,8 @@ export class InstallmentCommitmentStrategy implements CommitmentStrategy {
     totalInstallments: number,
     currentInstallment: number,
     totalAmount: number
-  ) {
-    const occurrences = [];
+  ): Occurrence[] {
+    const occurrences: Occurrence[] = [];
 
     const startDateParts = startDateString.split('-');
     const startDate = new Date(Date.UTC(
