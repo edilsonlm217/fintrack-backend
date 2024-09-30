@@ -1,17 +1,9 @@
+import { DateTime } from 'luxon';
+
 /**
  * Utilities for calculations and manipulations of financial occurrences.
  */
 export class OccurrenceHelper {
-  /**
-   * Converts a date string "YYYY-MM-DD" to a Date object.
-   * @param startDateString - Date string.
-   * @returns Corresponding Date object.
-   */
-  static parseStartDate(startDateString: string): Date {
-    const [year, month, day] = startDateString.split('-').map(Number);
-    return new Date(Date.UTC(year, month - 1, day));
-  }
-
   /**
    * Calculates the base amount for each installment.
    * @param totalAmount - Total amount.
@@ -50,15 +42,16 @@ export class OccurrenceHelper {
    * @param installmentIndex - Index of the installment.
    * @returns Occurrence date.
    */
-  static calculateOccurrenceDate(startDate: Date, installmentIndex: number): Date {
-    const occurrenceDate = new Date(startDate.getTime());
-    occurrenceDate.setUTCMonth(startDate.getUTCMonth() + installmentIndex);
+  static calculateOccurrenceDate(startDateString: string, installmentIndex: number): DateTime {
+    // Converte a string de data de início para um objeto DateTime
+    let startDate = DateTime.fromISO(startDateString).startOf('day');
 
-    if (occurrenceDate.getUTCDate() !== startDate.getUTCDate() && occurrenceDate.getUTCDate() === 1) {
-      occurrenceDate.setUTCMonth(occurrenceDate.getUTCMonth() + 1);
-      occurrenceDate.setUTCDate(0);
-    } else if (occurrenceDate.getUTCDate() !== startDate.getUTCDate()) {
-      occurrenceDate.setUTCDate(0);
+    // Adiciona o número de meses correspondente ao índice da parcela
+    let occurrenceDate = startDate.plus({ months: installmentIndex });
+
+    // Verifica se o dia do mês mudou devido à diferença de duração entre meses
+    if (occurrenceDate.day !== startDate.day) {
+      occurrenceDate = occurrenceDate.endOf('month');
     }
 
     return occurrenceDate;
