@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { OccurrenceStrategy } from '../interfaces/create-strategy.interface';
+import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
+import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-date.service';
+
+import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
-import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
-
-import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
-import { OccurrenceDateService } from '../services/occurrence-date/occurrence-date.service';
+import { OccurrenceStrategy } from '../interfaces/create-strategy.interface';
 
 @Injectable()
 export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
@@ -26,7 +26,11 @@ export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
 
     // Gerar ocorrências com base na periodicidade
     for (let i = 0; i < numberOfOccurrences; i++) {
-      const occurrenceDate = this.occurrenceDateService.calculateOccurrenceDate(dueDate, i, periodicity);
+      const occurrenceDate = this.occurrenceDateService.calculateOccurrenceDate({
+        startDateString: dueDate,
+        occurrenceIndex: i,
+        periodicity
+      });
 
       occurrences.push({
         commitment_id: commitment._id,
