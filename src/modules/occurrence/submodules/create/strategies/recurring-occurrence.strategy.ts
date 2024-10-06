@@ -5,13 +5,14 @@ import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 
-import { OccurrenceHelper } from 'src/modules/occurrence/occurrence.helper';
 import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
+import { OccurrenceDateService } from '../services/occurrence-date/occurrence-date.service';
 
 @Injectable()
 export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
   constructor(
-    private readonly occurrenceRepository: OccurrenceRepository
+    private readonly occurrenceDateService: OccurrenceDateService,
+    private readonly occurrenceRepository: OccurrenceRepository,
   ) { }
 
   async process(commitment: Commitment): Promise<Occurrence[]> {
@@ -21,11 +22,11 @@ export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
     const periodicity = commitment.periodicity;
 
     // Obter o número total de ocorrências com base na periodicidade
-    const numberOfOccurrences = OccurrenceHelper.getTotalOccurrencesForPeriodicity(periodicity);
+    const numberOfOccurrences = this.occurrenceDateService.getTotalOccurrencesForPeriodicity(periodicity);
 
     // Gerar ocorrências com base na periodicidade
     for (let i = 0; i < numberOfOccurrences; i++) {
-      const occurrenceDate = OccurrenceHelper.calculateOccurrenceDate(dueDate, i, periodicity);
+      const occurrenceDate = this.occurrenceDateService.calculateOccurrenceDate(dueDate, i, periodicity);
 
       occurrences.push({
         commitment_id: commitment._id,
