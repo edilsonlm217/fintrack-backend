@@ -3,6 +3,7 @@ import { OccurrenceStrategy } from '../interfaces/create-strategy.interface';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
+import { OccurrenceStatus } from 'src/common/enums/occurrence-status.enum';
 
 @Injectable()
 export class OneTimeOccurrenceStrategy implements OccurrenceStrategy {
@@ -15,7 +16,7 @@ export class OneTimeOccurrenceStrategy implements OccurrenceStrategy {
       commitment_id: commitment._id,
       due_date: commitment.due_date,
       amount: commitment.amount,
-      status: 'pendente',
+      status: OccurrenceStatus.PENDING,
     });
 
     return [occurrence];

@@ -6,6 +6,7 @@ import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
 import { InstallmentHelper } from '../helpers/installment.helper';
 import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-date.service';
+import { OccurrenceStatus } from 'src/common/enums/occurrence-status.enum';
 
 @Injectable()
 export class InstallmentOccurrenceStrategy implements OccurrenceStrategy {
@@ -56,7 +57,7 @@ export class InstallmentOccurrenceStrategy implements OccurrenceStrategy {
         commitment_id: commitment._id,
         due_date: occurrenceDate.toISODate(),
         amount: installmentAmount,
-        status: 'pendente',
+        status: OccurrenceStatus.PENDING,
       });
     }
 

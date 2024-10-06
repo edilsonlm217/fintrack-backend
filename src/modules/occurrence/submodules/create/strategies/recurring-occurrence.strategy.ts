@@ -7,6 +7,7 @@ import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 import { OccurrenceStrategy } from '../interfaces/create-strategy.interface';
+import { OccurrenceStatus } from 'src/common/enums/occurrence-status.enum';
 
 @Injectable()
 export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
@@ -36,7 +37,7 @@ export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
         commitment_id: commitment._id,
         due_date: occurrenceDate.toISODate(),
         amount: monthlyAmount,
-        status: 'pendente',
+        status: OccurrenceStatus.PENDING,
       });
     }
 
