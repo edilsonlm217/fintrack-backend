@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 
-import { CommitmentPeriodicity } from 'src/common/enums/commitment-periodicity.enum';
-import { OccurrenceDateStrategy } from './interfaces/occurrence-date.strategy';
-
 import { WeeklyOccurrenceDateStrategy } from './strategies/weekly-occurrence-date.strategy';
 import { BiWeeklyOccurrenceDateStrategy } from './strategies/bi-weekly-occurrence-date.strategy';
 import { MonthlyOccurrenceDateStrategy } from './strategies/monthly-occurrence-date.strategy';
 import { QuarterlyOccurrenceDateStrategy } from './strategies/quartely-occurrence-date.strategy';
 import { YearlyOccurrenceDateStrategy } from './strategies/yearly-occurrence-date.strategy';
+
+import { CommitmentPeriodicity } from 'src/common/enums/commitment-periodicity.enum';
+import { OccurrenceDateStrategy } from './interfaces/occurrence-date.strategy';
+import { CalculateOccurrenceDateParams } from '../../interfaces/calculate-occurrence-date.params.interface';
 
 @Injectable()
 export class OccurrenceDateService {
@@ -30,18 +31,8 @@ export class OccurrenceDateService {
     };
   }
 
-  /**
-   * Calculates the occurrence date based on the start date, occurrence index, and periodicity.
-   * @param startDateString - Start date as an ISO string.
-   * @param occurrenceIndex - Index of the occurrence (0-based).
-   * @param periodicity - The periodicity of the commitment.
-   * @returns Occurrence date.
-   */
-  calculateOccurrenceDate(
-    startDateString: string,
-    occurrenceIndex: number,
-    periodicity: CommitmentPeriodicity
-  ): DateTime {
+  calculateOccurrenceDate(params: CalculateOccurrenceDateParams): DateTime {
+    const { startDateString, periodicity, occurrenceIndex } = params;
     const startDate = DateTime.fromISO(startDateString).startOf('day');
     const strategy = this.strategies[periodicity];
 
