@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString, IsOptional, IsEnum, IsDateString, ValidateIf, IsInt } from 'class-validator';
 import { CommitmentType } from 'src/common/enums/commitment-type.enum';
+import { CommitmentPeriodicity } from '../enums/commitment-periodicity.enum';
 
 /**
  * Data Transfer Object (DTO) for creating a financial commitment.
@@ -38,35 +39,18 @@ export class CreateCommitmentDto {
    * This field is only applicable for fixed, one-time, or planned commitments.
    * The due date must be a valid ISO date string.
    */
-  @ValidateIf(o => o.type === CommitmentType.FIXED || o.type === CommitmentType.ONE_TIME || o.type === CommitmentType.PLANNED)
+  @IsNotEmpty({ message: 'The description must not be empty.' })
+  @IsString({ message: 'The description must be a string.' })
   @IsDateString({}, { message: 'The due date must be a valid ISO date.' })
-  @IsOptional()
-  due_date?: string;
-
-  /**
-   * Start date for recurring or installment-based commitments.
-   * This field is required for these types and must be a valid ISO date string.
-   */
-  @ValidateIf(o => o.type === CommitmentType.RECURRING || o.type === CommitmentType.INSTALLMENT)
-  @IsDateString({}, { message: 'The start date must be a valid ISO date.' })
-  start_date?: string;
-
-  /**
-   * End date for recurring or installment-based commitments.
-   * This field is optional and must be a valid ISO date string.
-   */
-  @ValidateIf(o => o.type === CommitmentType.RECURRING || o.type === CommitmentType.INSTALLMENT)
-  @IsDateString({}, { message: 'The end date must be a valid ISO date.' })
-  @IsOptional()
-  end_date?: string;
+  due_date: string;
 
   /**
    * Defines the periodicity for recurring commitments (e.g., weekly, monthly).
    * This field is only applicable for recurring commitments.
    */
-  @ValidateIf(o => o.type === CommitmentType.RECURRING)
-  @IsString({ message: 'The periodicity must be a valid string.' })
-  periodicity?: string;
+  @ValidateIf(o => o.type === CommitmentType.RECURRING || o.type === CommitmentType.INSTALLMENT)
+  @IsEnum(CommitmentPeriodicity, { message: 'The periodicity must be a valid value.' })
+  periodicity?: CommitmentPeriodicity;
 
   /**
    * Defines the total number of installments for installment-based commitments.
