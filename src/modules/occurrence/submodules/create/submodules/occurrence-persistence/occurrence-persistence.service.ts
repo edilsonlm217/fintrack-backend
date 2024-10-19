@@ -12,8 +12,4 @@ export class OccurrencePersistenceService {
   async saveOccurrences(occurrences: CreateOccurrenceDto[]): Promise<Occurrence[]> {
     return this.occurrenceRepository.insertMany(occurrences);
   }
-
-  async saveOccurrence(occurrence: CreateOccurrenceDto): Promise<Occurrence> {
-    return this.occurrenceRepository.insertOne(occurrence);
-  }
 }
