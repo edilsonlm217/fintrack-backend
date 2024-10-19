@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Db, Collection, ObjectId } from 'mongodb';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
-import { CreateCommitmentDto } from 'src/modules/commitment/dto/create-commitment.dto';
+import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 
 @Injectable()
 export class CommitmentRepository {
