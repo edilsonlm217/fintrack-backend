@@ -1,22 +1,14 @@
 import { Module } from '@nestjs/common';
 
 import { OccurrenceGenerationModule } from './submodules/occurrence-generation/occurrence-generation.module';
-
-import { InstallmentOccurrenceStrategy } from './strategies/installment-occurrence.strategy';
-import { RecurringOccurrenceStrategy } from './strategies/recurring-occurrence.strategy';
-import { OneTimeOccurrenceStrategy } from './strategies/one-time-occurrence.strategy';
+import { OccurrencePersistenceModule } from './submodules/occurrence-persistence/occurrence-persistence.module';
 
 import { CreateService } from './create.service';
 
 @Module({
-  imports: [OccurrenceGenerationModule],
+  imports: [OccurrenceGenerationModule, OccurrencePersistenceModule],
   controllers: [],
-  providers: [
-    CreateService,
-    RecurringOccurrenceStrategy,
-    InstallmentOccurrenceStrategy,
-    OneTimeOccurrenceStrategy
-  ],
+  providers: [CreateService],
   exports: [CreateService]
 })
 export class CreateModule { }
