@@ -21,7 +21,6 @@ export interface RecurringDetails {
 export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
   constructor(
     private readonly occurrenceGenerationService: OccurrenceGenerationService,
-    private readonly occurrenceDateService: OccurrenceDateService,
     private readonly occurrencePersistenceService: OccurrencePersistenceService
   ) { }
 
@@ -35,7 +34,7 @@ export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
     const dueDate = commitment.due_date;
     const monthlyAmount = commitment.amount;
     const periodicity = commitment.periodicity;
-    const numberOfOccurrences = this.occurrenceDateService.getTotalOccurrencesForPeriodicity(periodicity);
+    const numberOfOccurrences = this.occurrenceGenerationService.getTotalOccurrencesForPeriodicity(periodicity);
 
     return { dueDate, monthlyAmount, periodicity, numberOfOccurrences };
   }

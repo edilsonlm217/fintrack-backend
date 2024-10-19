@@ -69,6 +69,10 @@ export class OccurrenceGenerationService {
     );
   }
 
+  getTotalOccurrencesForPeriodicity(periodicity: CommitmentPeriodicity) {
+    return this.occurrenceDateService.getTotalOccurrencesForPeriodicity(periodicity)
+  }
+
   private calculateInstallmentAmount(
     index: number,
     remainingInstallments: number,
