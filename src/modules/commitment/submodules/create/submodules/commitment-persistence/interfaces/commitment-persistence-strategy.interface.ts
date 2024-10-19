@@ -1,6 +1,6 @@
 import { Commitment } from "src/common/interfaces/commitment.interface";
-import { CreateCommitmentDto } from "../../../../../common/dto/create-commitment.dto";
+import { CreateCommitmentDto } from "src/common/dto/create-commitment.dto";
 
-export interface CommitmentStrategy {
+export interface CommitmentPersistenceStrategy {
   process(createCommitmentDto: CreateCommitmentDto): Promise<Commitment>;
 }

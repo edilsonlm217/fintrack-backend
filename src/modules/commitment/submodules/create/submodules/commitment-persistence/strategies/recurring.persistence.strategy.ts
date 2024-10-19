@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CommitmentStrategy } from '../interfaces/create-strategy.interface';
+import { CommitmentPersistenceStrategy } from '../interfaces/commitment-persistence-strategy.interface';
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 import { CommitmentRepository } from 'src/database/repositories/commitment.repository';
 
 @Injectable()
-export class RecurringCommitmentStrategy implements CommitmentStrategy {
+export class RecurringPersistenceStrategy implements CommitmentPersistenceStrategy {
   constructor(private readonly commitmentRepository: CommitmentRepository) { }
 
   async process(createCommitmentDto: CreateCommitmentDto) {
