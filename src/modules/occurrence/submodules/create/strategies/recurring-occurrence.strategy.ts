@@ -1,46 +1,51 @@
 import { Injectable } from '@nestjs/common';
 
-import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
-import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-date.service';
+import { OccurrenceDateService } from '../submodules/occurrence-generation/submodules/occurrence-date/occurrence-date.service';
+import { OccurrenceGenerationService } from '../submodules/occurrence-generation/occurrence-generation.service';
 
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 import { OccurrenceStrategy } from '../interfaces/create-strategy.interface';
-import { OccurrenceStatus } from 'src/common/enums/occurrence-status.enum';
+import { OccurrencePersistenceService } from '../submodules/occurrence-generation/submodules/occurrence-persistence/occurrence-persistence.service';
+import { CommitmentPeriodicity } from 'src/common/enums/commitment-periodicity.enum';
+
+export interface RecurringDetails {
+  dueDate: string; // ou Date, dependendo do formato que você está utilizando
+  monthlyAmount: number;
+  periodicity: CommitmentPeriodicity; // Ajuste o tipo conforme o que você usa para periodicidade
+  numberOfOccurrences: number;
+}
 
 @Injectable()
 export class RecurringOccurrenceStrategy implements OccurrenceStrategy {
   constructor(
+    private readonly occurrenceGenerationService: OccurrenceGenerationService,
     private readonly occurrenceDateService: OccurrenceDateService,
-    private readonly occurrenceRepository: OccurrenceRepository,
+    private readonly occurrencePersistenceService: OccurrencePersistenceService
   ) { }
 
   async process(commitment: Commitment): Promise<Occurrence[]> {
-    const occurrences: CreateOccurrenceDto[] = [];
+    const recurringDetails = this.getRecurringDetails(commitment);
+    const occurrences = this.generateOccurrences(commitment, recurringDetails);
+    return this.saveOccurrences(occurrences);
+  }
+
+  private getRecurringDetails(commitment: Commitment) {
     const dueDate = commitment.due_date;
     const monthlyAmount = commitment.amount;
     const periodicity = commitment.periodicity;
-
-    // Obter o número total de ocorrências com base na periodicidade
     const numberOfOccurrences = this.occurrenceDateService.getTotalOccurrencesForPeriodicity(periodicity);
 
-    // Gerar ocorrências com base na periodicidade
-    for (let i = 0; i < numberOfOccurrences; i++) {
-      const occurrenceDate = this.occurrenceDateService.calculateOccurrenceDate({
-        startDateString: dueDate,
-        occurrenceIndex: i,
-        periodicity
-      });
+    return { dueDate, monthlyAmount, periodicity, numberOfOccurrences };
+  }
 
-      occurrences.push({
-        commitment_id: commitment._id,
-        due_date: occurrenceDate.toISODate(),
-        amount: monthlyAmount,
-        status: OccurrenceStatus.PENDING,
-      });
-    }
+  private generateOccurrences(commitment: Commitment, recurringDetails: RecurringDetails): CreateOccurrenceDto[] {
+    const { dueDate, monthlyAmount, numberOfOccurrences, periodicity } = recurringDetails;
+    return this.occurrenceGenerationService.generateRecurringOccurrences(commitment, dueDate, monthlyAmount, periodicity, numberOfOccurrences);
+  }
 
-    return this.occurrenceRepository.insertMany(occurrences);
+  private saveOccurrences(occurrences: CreateOccurrenceDto[]): Promise<Occurrence[]> {
+    return this.occurrencePersistenceService.saveOccurrences(occurrences);
   }
 }
