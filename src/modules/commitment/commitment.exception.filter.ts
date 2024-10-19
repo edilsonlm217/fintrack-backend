@@ -13,7 +13,7 @@ export class CommitmentExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-
+    console.log(exception);
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     let responseMessage = 'Internal Server Error';
 
