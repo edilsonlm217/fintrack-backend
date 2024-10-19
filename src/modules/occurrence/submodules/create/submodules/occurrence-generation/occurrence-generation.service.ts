@@ -1,84 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { OccurrenceDateService } from './submodules/occurrence-date/occurrence-date.service';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
-import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
-import { OccurrenceFactory } from '../../factories/occurrence.factory';
-import { CommitmentPeriodicity } from 'src/common/enums/commitment-periodicity.enum';
+
+import { CommitmentType } from 'src/common/enums/commitment-type.enum';
+import { RecurringGenerationStrategy } from './strategies/recurring-generation.strategy';
+import { InstallmentGenerationStrategy } from './strategies/installment-generation.strategy';
+import { OneTimeGenerationStrategy } from './strategies/one-time-generation.strategy';
+import { GenerationStrategy } from './interfaces/generation-strategy.interface';
 
 @Injectable()
 export class OccurrenceGenerationService {
+  private strategies: Record<CommitmentType, GenerationStrategy>;
+
   constructor(
-    private readonly occurrenceDateService: OccurrenceDateService,
-    private readonly occurrenceFactory: OccurrenceFactory
-  ) { }
+    private readonly recurringStrategy: RecurringGenerationStrategy,
+    private readonly installmentStrategy: InstallmentGenerationStrategy,
+    private readonly oneTimeStrategy: OneTimeGenerationStrategy,
+  ) {
+    this.strategies = {
+      [CommitmentType.RECURRING]: this.recurringStrategy,
+      [CommitmentType.INSTALLMENT]: this.installmentStrategy,
+      [CommitmentType.ONE_TIME]: this.oneTimeStrategy,
+    };
+  }
 
-  generateInstallmentOccurrences(
-    commitment: Commitment,
-    baseInstallmentAmount: number,
-    adjustmentAmount: number,
-    remainingInstallments: number
-  ): CreateOccurrenceDto[] {
-    const occurrences: CreateOccurrenceDto[] = [];
-
-    for (let i = 0; i < remainingInstallments; i++) {
-      const occurrenceDate = this.occurrenceDateService.calculateOccurrenceDate({
-        startDateString: commitment.due_date,
-        occurrenceIndex: i,
-        periodicity: commitment.periodicity
-      }).toISODate();
-
-      const installmentAmount = this.calculateInstallmentAmount(i, remainingInstallments, baseInstallmentAmount, adjustmentAmount);
-      const occurrence = this.occurrenceFactory.createOccurrence(commitment, occurrenceDate, installmentAmount);
-
-      occurrences.push(occurrence);
+  async process(commitment: Commitment) {
+    const strategy = this.strategies[commitment.type];
+    if (!strategy) {
+      throw new Error(`Strategy not found for type ${commitment.type}`);
     }
-
-    return occurrences;
-  }
-
-  // Novo método para compromissos recorrentes
-  generateRecurringOccurrences(
-    commitment: Commitment,
-    dueDate: string,
-    monthlyAmount: number,
-    periodicity: CommitmentPeriodicity,
-    numberOfOccurrences: number
-  ): CreateOccurrenceDto[] {
-    const occurrences: CreateOccurrenceDto[] = [];
-
-    // Gerar ocorrências com base na periodicidade
-    for (let i = 0; i < numberOfOccurrences; i++) {
-      const occurrenceDate = this.occurrenceDateService.calculateOccurrenceDate({
-        startDateString: dueDate,
-        occurrenceIndex: i,
-        periodicity
-      }).toISODate();
-
-      const occurrence = this.occurrenceFactory.createOccurrence(commitment, occurrenceDate, monthlyAmount);
-      occurrences.push(occurrence);
-    }
-
-    return occurrences;
-  }
-
-  generateOneTimeOccurrence(commitment: Commitment) {
-    return this.occurrenceFactory.createOccurrence(
-      commitment,
-      commitment.due_date,
-      commitment.amount
-    );
-  }
-
-  getTotalOccurrencesForPeriodicity(periodicity: CommitmentPeriodicity) {
-    return this.occurrenceDateService.getTotalOccurrencesForPeriodicity(periodicity)
-  }
-
-  private calculateInstallmentAmount(
-    index: number,
-    remainingInstallments: number,
-    baseInstallmentAmount: number,
-    adjustmentAmount: number
-  ): number {
-    return baseInstallmentAmount + (index === remainingInstallments - 1 ? adjustmentAmount : 0);
+    return strategy.process(commitment);
   }
 }
