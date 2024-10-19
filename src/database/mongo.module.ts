@@ -1,6 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
 import { CommitmentRepository } from './repositories/commitment.repository';
+import { OccurrenceRepository } from './repositories/occurrence.repository';
 
 @Global()
 @Module({
@@ -14,7 +15,12 @@ import { CommitmentRepository } from './repositories/commitment.repository';
       },
     },
     CommitmentRepository,
+    OccurrenceRepository,
   ],
-  exports: ['MONGO_CONNECTION', CommitmentRepository],
+  exports: [
+    'MONGO_CONNECTION',
+    CommitmentRepository,
+    OccurrenceRepository
+  ],
 })
 export class MongoModule { }
