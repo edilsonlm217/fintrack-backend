@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateService } from './submodules/create/create.service';
-import { CreateCommitmentDto } from './dto/create-commitment.dto';
+import { CreateCommitmentDto } from '../../common/dto/create-commitment.dto';
 
 @Injectable()
 export class CommitmentService {
