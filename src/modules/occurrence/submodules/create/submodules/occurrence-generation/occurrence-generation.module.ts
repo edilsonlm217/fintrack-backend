@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 
 import { InstallmentCalculationModule } from './submodules/installmente-calculation/installment-calculation.module';
 import { OccurrenceDateModule } from './submodules/occurrence-date/occurrence-date.module';
-import { OccurrencePersistenceModule } from '../occurrence-persistence/occurrence-persistence.module';
 
 import { OccurrenceGenerationService } from './occurrence-generation.service';
 
@@ -10,7 +9,6 @@ import { OccurrenceGenerationService } from './occurrence-generation.service';
   imports: [
     InstallmentCalculationModule,
     OccurrenceDateModule,
-    OccurrencePersistenceModule,
   ],
   controllers: [],
   providers: [OccurrenceGenerationService],
