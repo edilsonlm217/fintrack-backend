@@ -1,3 +1,4 @@
+import { CommitmentPeriodicity } from "../enums/commitment-periodicity.enum";
 import { CommitmentType } from "../enums/commitment-type.enum";
 
 /**
@@ -60,7 +61,7 @@ export interface Commitment {
      * The periodicity of the commitment.
      * Applicable for recurring commitments to define how often the commitment occurs (e.g., "monthly").
      */
-    periodicity?: string;
+    periodicity?: CommitmentPeriodicity;
 
     /**
      * The total number of installments for the commitment.
