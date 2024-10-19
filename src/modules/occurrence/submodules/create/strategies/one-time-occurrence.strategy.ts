@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
 import { OccurrencePersistenceService } from '../submodules/occurrence-generation/submodules/occurrence-persistence/occurrence-persistence.service';
+import { OccurrenceGenerationService } from '../submodules/occurrence-generation/occurrence-generation.service';
 
 import { OccurrenceStrategy } from '../interfaces/create-strategy.interface';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
-
-import { OccurrenceFactory } from '../factories/occurrence.factory';
 
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 
@@ -14,21 +13,13 @@ import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 export class OneTimeOccurrenceStrategy implements OccurrenceStrategy {
   constructor(
     private readonly occurrencePersistenceService: OccurrencePersistenceService,
-    private readonly occurrenceFactory: OccurrenceFactory,
+    private readonly occurrenceGenerationService: OccurrenceGenerationService,
   ) { }
 
   async process(commitment: Commitment): Promise<Occurrence[]> {
-    const createOccurrenceDto = this.createOccurrenceDto(commitment);
+    const createOccurrenceDto = this.occurrenceGenerationService.generateOneTimeOccurrence(commitment);
     const occurrence = await this.saveOccurrence(createOccurrenceDto);
     return [occurrence];
-  }
-
-  private createOccurrenceDto(commitment: Commitment) {
-    return this.occurrenceFactory.createOccurrence(
-      commitment,
-      commitment.due_date,
-      commitment.amount
-    );
   }
 
   private async saveOccurrence(createOccurrenceDto: CreateOccurrenceDto): Promise<Occurrence> {
