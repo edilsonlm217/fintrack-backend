@@ -5,14 +5,13 @@ import { GenerationStrategy } from '../interfaces/generation-strategy.interface'
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { InstallmentCalculationService } from '../submodules/installmente-calculation/installment-calculation.service';
 import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-date.service';
-import { OccurrenceFactory } from '../../../factories/occurrence.factory';
+import { CreateOccurrenceDtoFactory } from '../../../../../../../common/factories/create-occurrence-dto.factory';
 
 @Injectable()
 export class InstallmentGenerationStrategy implements GenerationStrategy {
   constructor(
     private readonly installmentCalculationService: InstallmentCalculationService,
     private readonly occurrenceDateService: OccurrenceDateService,
-    private readonly occurrenceFactory: OccurrenceFactory
   ) { }
 
   async process(commitment: Commitment): Promise<CreateOccurrenceDto[]> {
@@ -28,7 +27,7 @@ export class InstallmentGenerationStrategy implements GenerationStrategy {
     return occurrencesToCreate;
   }
 
-  generateInstallmentOccurrences(
+  private generateInstallmentOccurrences(
     commitment: Commitment,
     baseInstallmentAmount: number,
     adjustmentAmount: number,
@@ -44,7 +43,7 @@ export class InstallmentGenerationStrategy implements GenerationStrategy {
       }).toISODate();
 
       const installmentAmount = this.calculateInstallmentAmount(i, remainingInstallments, baseInstallmentAmount, adjustmentAmount);
-      const occurrence = this.occurrenceFactory.createOccurrence(commitment, occurrenceDate, installmentAmount);
+      const occurrence = CreateOccurrenceDtoFactory.createOccurrence(commitment, occurrenceDate, installmentAmount);
 
       occurrences.push(occurrence);
     }

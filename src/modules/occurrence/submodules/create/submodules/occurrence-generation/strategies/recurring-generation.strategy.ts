@@ -5,7 +5,7 @@ import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { CommitmentPeriodicity } from 'src/common/enums/commitment-periodicity.enum';
-import { OccurrenceFactory } from '../../../factories/occurrence.factory';
+import { CreateOccurrenceDtoFactory } from '../../../../../../../common/factories/create-occurrence-dto.factory';
 import { GenerationStrategy } from '../interfaces/generation-strategy.interface';
 import { RecurringDetails } from '../interfaces/recurring-details.interface';
 
@@ -13,7 +13,6 @@ import { RecurringDetails } from '../interfaces/recurring-details.interface';
 export class RecurringGenerationStrategy implements GenerationStrategy {
   constructor(
     private readonly occurrenceDateService: OccurrenceDateService,
-    private readonly occurrenceFactory: OccurrenceFactory,
   ) { }
 
   async process(commitment: Commitment): Promise<CreateOccurrenceDto[]> {
@@ -32,11 +31,11 @@ export class RecurringGenerationStrategy implements GenerationStrategy {
     return { dueDate, monthlyAmount, periodicity, numberOfOccurrences };
   }
 
-  getTotalOccurrencesForPeriodicity(periodicity: CommitmentPeriodicity) {
+  private getTotalOccurrencesForPeriodicity(periodicity: CommitmentPeriodicity) {
     return this.occurrenceDateService.getTotalOccurrencesForPeriodicity(periodicity)
   }
 
-  generateRecurringOccurrences(
+  private generateRecurringOccurrences(
     commitment: Commitment,
     dueDate: string,
     monthlyAmount: number,
@@ -53,7 +52,7 @@ export class RecurringGenerationStrategy implements GenerationStrategy {
         periodicity
       }).toISODate();
 
-      const occurrence = this.occurrenceFactory.createOccurrence(commitment, occurrenceDate, monthlyAmount);
+      const occurrence = CreateOccurrenceDtoFactory.createOccurrence(commitment, occurrenceDate, monthlyAmount);
       occurrences.push(occurrence);
     }
 
