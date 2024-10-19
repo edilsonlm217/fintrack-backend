@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommitmentStrategy } from '../interfaces/create-strategy.interface';
-import { CreateCommitmentDto } from 'src/modules/commitment/dto/create-commitment.dto';
+import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 import { CommitmentRepository } from 'src/database/repositories/commitment.repository';
 
 @Injectable()
