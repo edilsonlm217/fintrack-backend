@@ -15,48 +15,30 @@ export class InstallmentGenerationStrategy implements GenerationStrategy {
   ) { }
 
   async process(commitment: Commitment): Promise<CreateOccurrenceDto[]> {
-    const installmentDetails = this.installmentCalculationService.calculateInstallmentDetails(commitment);
-    const { baseInstallmentAmount, adjustmentAmount, remainingInstallments } = installmentDetails;
-    const occurrencesToCreate = this.generateInstallmentOccurrences(
-      commitment,
-      baseInstallmentAmount,
-      adjustmentAmount,
-      remainingInstallments
-    );
+    const { baseInstallmentAmount, adjustmentAmount, remainingInstallments } =
+      this.installmentCalculationService.calculateInstallmentDetails(commitment);
 
-    return occurrencesToCreate;
-  }
+    return Array.from({ length: remainingInstallments }, (_, i) => {
+      const occurrenceDate = this.occurrenceDateService
+        .calculateOccurrenceDate({
+          startDateString: commitment.due_date,
+          occurrenceIndex: i,
+          periodicity: commitment.periodicity,
+        })
+        .toISODate();
 
-  private generateInstallmentOccurrences(
-    commitment: Commitment,
-    baseInstallmentAmount: number,
-    adjustmentAmount: number,
-    remainingInstallments: number
-  ): CreateOccurrenceDto[] {
-    const occurrences: CreateOccurrenceDto[] = [];
+      const installmentAmount = this.installmentCalculationService.calculateInstallmentAmount({
+        index: i,
+        remainingInstallments,
+        baseInstallmentAmount,
+        adjustmentAmount
+      });
 
-    for (let i = 0; i < remainingInstallments; i++) {
-      const occurrenceDate = this.occurrenceDateService.calculateOccurrenceDate({
-        startDateString: commitment.due_date,
-        occurrenceIndex: i,
-        periodicity: commitment.periodicity
-      }).toISODate();
-
-      const installmentAmount = this.calculateInstallmentAmount(i, remainingInstallments, baseInstallmentAmount, adjustmentAmount);
-      const occurrence = CreateOccurrenceDtoFactory.createOccurrence(commitment, occurrenceDate, installmentAmount);
-
-      occurrences.push(occurrence);
-    }
-
-    return occurrences;
-  }
-
-  private calculateInstallmentAmount(
-    index: number,
-    remainingInstallments: number,
-    baseInstallmentAmount: number,
-    adjustmentAmount: number
-  ): number {
-    return baseInstallmentAmount + (index === remainingInstallments - 1 ? adjustmentAmount : 0);
+      return CreateOccurrenceDtoFactory.createOccurrence(
+        commitment,
+        occurrenceDate,
+        installmentAmount,
+      );
+    });
   }
 }
