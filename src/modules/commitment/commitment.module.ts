@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CommitmentController } from './commitment.controller';
-import { CommitmentService } from './commitment.service';
-import { CreateModule } from './submodules/create/create.module';
-import { OccurrenceModule } from '../occurrence/occurrence.module';
+import { CoreModule } from 'src/core/core.module';
 
 @Module({
-  imports: [CreateModule, OccurrenceModule],
+  imports: [CoreModule],
   controllers: [CommitmentController],
-  providers: [CommitmentService],
-  exports: [CommitmentService]
+  providers: [],
+  exports: []
 })
 export class CommitmentModule { }

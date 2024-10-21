@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { OccurrenceGenerationModule } from './submodules/occurrence-generation/occurrence-generation.module';
-import { OccurrencePersistenceModule } from './submodules/occurrence-persistence/occurrence-persistence.module';
+import { OccurrenceGenerationModule } from './occurrence-generation/occurrence-generation.module';
+import { OccurrencePersistenceModule } from './occurrence-persistence/occurrence-persistence.module';
 
 import { CreateService } from './create.service';
 

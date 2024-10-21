@@ -5,7 +5,7 @@ import { GenerationStrategy } from '../interfaces/generation-strategy.interface'
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { InstallmentCalculationService } from '../submodules/installmente-calculation/installment-calculation.service';
 import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-date.service';
-import { CreateOccurrenceDtoFactory } from '../../../../../../../common/factories/create-occurrence-dto.factory';
+import { CreateOccurrenceDtoFactory } from '../../../../../common/factories/create-occurrence-dto.factory';
 
 @Injectable()
 export class InstallmentGenerationStrategy implements GenerationStrategy {

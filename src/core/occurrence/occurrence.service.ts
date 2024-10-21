@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
-import { CreateService } from './submodules/create/create.service';
+import { CreateService } from './create/create.service';
 
 @Injectable()
 export class OccurrenceService {

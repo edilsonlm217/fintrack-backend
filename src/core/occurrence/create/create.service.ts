@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 
-import { OccurrencePersistenceService } from './submodules/occurrence-persistence/occurrence-persistence.service';
-import { OccurrenceGenerationService } from './submodules/occurrence-generation/occurrence-generation.service';
+import { OccurrencePersistenceService } from './occurrence-persistence/occurrence-persistence.service';
+import { OccurrenceGenerationService } from './occurrence-generation/occurrence-generation.service';
 
 @Injectable()
 export class CreateService {

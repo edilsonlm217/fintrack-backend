@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateService } from './submodules/create/create.service';
+import { CreateService } from './create/create.service';
 import { CreateCommitmentDto } from '../../common/dto/create-commitment.dto';
 
 @Injectable()

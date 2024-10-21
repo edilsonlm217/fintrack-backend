@@ -1,9 +1,8 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, UseFilters } from '@nestjs/common';
-import { CommitmentService } from './commitment.service';
+import { CommitmentService } from '../../core/commitment/commitment.service';
 import { CreateCommitmentDto } from '../../common/dto/create-commitment.dto';
 import { CommitmentExceptionFilter } from './commitment.exception.filter';
-import { OccurrenceService } from '../occurrence/occurrence.service';
-import { Occurrence } from 'src/common/interfaces/occurrence.interface';
+import { OccurrenceService } from '../../core/occurrence/occurrence.service';
 
 @Controller('commitments')
 export class CommitmentController {

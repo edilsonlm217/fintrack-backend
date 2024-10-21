@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { OccurrenceService } from './occurrence.service';
-import { CreateModule } from './submodules/create/create.module';
+import { CreateModule } from './create/create.module';
 
 @Module({
   imports: [CreateModule],
