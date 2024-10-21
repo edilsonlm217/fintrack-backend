@@ -4,6 +4,9 @@ import { InstallmentCalculationModule } from './submodules/installmente-calculat
 import { OccurrenceDateModule } from './submodules/occurrence-date/occurrence-date.module';
 
 import { OccurrenceGenerationService } from './occurrence-generation.service';
+import { InstallmentGenerationStrategy } from './strategies/installment-generation.strategy';
+import { OneTimeGenerationStrategy } from './strategies/one-time-generation.strategy';
+import { RecurringGenerationStrategy } from './strategies/recurring-generation.strategy';
 
 @Module({
   imports: [
@@ -11,7 +14,12 @@ import { OccurrenceGenerationService } from './occurrence-generation.service';
     OccurrenceDateModule,
   ],
   controllers: [],
-  providers: [OccurrenceGenerationService],
+  providers: [
+    OccurrenceGenerationService,
+    InstallmentGenerationStrategy,
+    OneTimeGenerationStrategy,
+    RecurringGenerationStrategy,
+  ],
   exports: [
     OccurrenceGenerationService,
   ]
