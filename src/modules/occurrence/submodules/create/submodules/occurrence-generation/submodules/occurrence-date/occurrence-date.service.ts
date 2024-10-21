@@ -9,7 +9,7 @@ import { YearlyOccurrenceDateStrategy } from './strategies/yearly-occurrence-dat
 
 import { CommitmentPeriodicity } from 'src/common/enums/commitment-periodicity.enum';
 import { OccurrenceDateStrategy } from './interfaces/occurrence-date.strategy';
-import { CalculateOccurrenceDateParams } from '../../../../interfaces/calculate-occurrence-date.params.interface';
+import { CalculateOccurrenceDateParams } from './interfaces/calculate-occurrence-date.params.interface';
 
 @Injectable()
 export class OccurrenceDateService {
