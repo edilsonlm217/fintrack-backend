@@ -9,6 +9,11 @@ import { RecurringPersistenceStrategy } from './strategies/recurring.persistence
 import { InstallmentPersistenceStrategy } from './strategies/installment-persistence.strategy';
 import { OneTimePersistenceStrategy } from './strategies/one-time-persistence.strategy';
 
+/**
+ * Service responsible for persisting financial commitments based on their type.
+ * It utilizes different strategies for processing commitments of various types
+ * (recurring, installment, one-time).
+ */
 @Injectable()
 export class CommitmentPersistenceService {
   private strategies: Record<CommitmentType, CommitmentPersistenceStrategy>;
@@ -25,6 +30,18 @@ export class CommitmentPersistenceService {
     };
   }
 
+  /**
+   * Processes the creation of a financial commitment using the appropriate strategy
+   * based on the commitment type.
+   * 
+   * @param createCommitmentDto - Data Transfer Object (DTO) containing the details
+   * of the commitment to be created.
+   * 
+   * @returns A promise that resolves to the result of the commitment processing
+   * using the selected strategy.
+   * 
+   * @throws Error if no strategy is found for the provided commitment type.
+   */
   async process(createCommitmentDto: CreateCommitmentDto) {
     const strategy = this.strategies[createCommitmentDto.type];
     if (!strategy) {
