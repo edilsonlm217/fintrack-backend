@@ -23,10 +23,8 @@ export class CommitmentController {
 
     return {
       message: 'Commitment successfully created',
-      data: {
-        commitment,
-        occurrences
-      },
+      commitment,
+      occurrences
     };
   }
 }

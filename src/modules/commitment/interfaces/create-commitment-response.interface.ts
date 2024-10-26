@@ -13,19 +13,14 @@ export interface CreateCommitmentResponse {
   message: string;
 
   /**
-   * Data object containing details of the created commitment and its occurrences.
+   * The created financial commitment.
+   * Contains all the details related to the newly created commitment.
    */
-  data: {
-    /**
-     * The created financial commitment.
-     * Contains all the details related to the newly created commitment.
-     */
-    commitment: Commitment;
+  commitment: Commitment;
 
-    /**
-     * An array of occurrences related to the created commitment.
-     * Each occurrence represents an instance or event derived from the commitment.
-     */
-    occurrences: Array<Occurrence>;
-  };
+  /**
+   * An array of occurrences related to the created commitment.
+   * Each occurrence represents an instance or event derived from the commitment.
+   */
+  occurrences: Array<Occurrence>;
 }
