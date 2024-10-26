@@ -3,10 +3,23 @@ import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 import { CreateService } from './create/create.service';
 
+/**
+ * Service responsible for managing occurrences related to financial commitments.
+ * Utilizes the CreateService to process the creation of occurrences based on 
+ * provided commitments.
+ */
 @Injectable()
 export class OccurrenceService {
   constructor(private readonly createService: CreateService) { }
 
+  /**
+   * Creates occurrences based on a given commitment.
+   * 
+   * @param commitment - The commitment for which occurrences will be created.
+   * 
+   * @returns A Promise that resolves to an array of Occurrence objects 
+   * created for the specified commitment.
+   */
   async create(commitment: Commitment): Promise<Occurrence[]> {
     return this.createService.process(commitment);
   }
