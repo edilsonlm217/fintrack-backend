@@ -7,6 +7,10 @@ import { InstallmentCalculationService } from '../submodules/installmente-calcul
 import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-date.service';
 import { CreateOccurrenceDtoFactory } from '../../../../../common/factories/create-occurrence-dto.factory';
 
+/**
+ * Strategy for generating occurrences for installment commitments.
+ * This strategy calculates installment amounts and occurrence dates based on the commitment details.
+ */
 @Injectable()
 export class InstallmentGenerationStrategy implements GenerationStrategy {
   constructor(
@@ -14,6 +18,12 @@ export class InstallmentGenerationStrategy implements GenerationStrategy {
     private readonly occurrenceDateService: OccurrenceDateService,
   ) { }
 
+  /**
+   * Processes a commitment to generate an array of occurrence DTOs.
+   *
+   * @param commitment - The commitment object containing details such as due date, base installment amount, and periodicity.
+   * @returns A promise that resolves to an array of CreateOccurrenceDto instances.
+   */
   async process(commitment: Commitment): Promise<CreateOccurrenceDto[]> {
     const { baseInstallmentAmount, adjustmentAmount, remainingInstallments } =
       this.installmentCalculationService.calculateInstallmentDetails(commitment);

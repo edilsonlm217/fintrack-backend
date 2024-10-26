@@ -7,6 +7,10 @@ import { InstallmentGenerationStrategy } from './strategies/installment-generati
 import { OneTimeGenerationStrategy } from './strategies/one-time-generation.strategy';
 import { GenerationStrategy } from './interfaces/generation-strategy.interface';
 
+/**
+ * Service responsible for generating occurrences based on different types of commitments.
+ * It utilizes various generation strategies for different commitment types to produce occurrences.
+ */
 @Injectable()
 export class OccurrenceGenerationService {
   private strategies: Record<CommitmentType, GenerationStrategy>;
@@ -23,6 +27,15 @@ export class OccurrenceGenerationService {
     };
   }
 
+  /**
+   * Processes a commitment to generate occurrences using the appropriate strategy.
+   *
+   * @param commitment - The commitment for which occurrences will be generated.
+   *
+   * @returns A Promise that resolves to an array of generated occurrences.
+   *
+   * @throws Error if the strategy for the given commitment type is not found.
+   */
   async process(commitment: Commitment) {
     const strategy = this.strategies[commitment.type];
     if (!strategy) {
