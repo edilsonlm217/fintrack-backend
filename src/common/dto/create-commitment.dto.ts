@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsOptional, IsEnum, IsDateString, ValidateIf, IsInt } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional, IsEnum, IsDateString, ValidateIf, IsInt, Min } from 'class-validator';
 import { CommitmentType } from 'src/common/enums/commitment-type.enum';
 import { CommitmentPeriodicity } from '../enums/commitment-periodicity.enum';
 
@@ -28,10 +28,11 @@ export class CreateCommitmentDto {
 
   /**
    * The amount associated with the financial commitment.
-   * Must be a valid number and is required.
+   * Must be a valid number, greater than zero, and is required.
    */
   @IsNotEmpty({ message: 'The amount is required.' })
   @IsNumber({}, { message: 'The amount must be a valid number.' })
+  @Min(0.01, { message: 'The amount must be greater than zero.' })
   amount: number;
 
   /**
