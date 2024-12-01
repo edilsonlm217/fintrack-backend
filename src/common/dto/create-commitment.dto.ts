@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsOptional, IsEnum, IsDateString, ValidateIf, IsInt, Min } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional, IsEnum, IsDateString, ValidateIf, IsInt, Min, IsUUID } from 'class-validator';
 import { CommitmentType } from 'src/common/enums/commitment-type.enum';
 import { CommitmentPeriodicity } from '../enums/commitment-periodicity.enum';
 
@@ -86,4 +86,12 @@ export class CreateCommitmentDto {
   @IsOptional()
   @IsString({ message: 'The subcategory must be a string.' })
   subcategory?: string;
+
+  /**
+   * Reference to the identifier of the user associated with the financial commitment.
+   * Must be a valid UUID.
+   */
+  @IsNotEmpty({ message: 'The user ID must not be empty.' })
+  @IsUUID('4', { message: 'The user ID must be a valid UUID.' })
+  user_id: string;
 }

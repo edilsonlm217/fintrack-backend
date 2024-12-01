@@ -28,7 +28,8 @@ export class RecurringPersistenceStrategy implements CommitmentPersistenceStrate
       periodicity: createCommitmentDto.periodicity,
       due_date: createCommitmentDto.due_date,
       category: createCommitmentDto.category,
-      subcategory: createCommitmentDto.subcategory
+      subcategory: createCommitmentDto.subcategory,
+      user_id: createCommitmentDto.user_id,
     });
   }
 }
