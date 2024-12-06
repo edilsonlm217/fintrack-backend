@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsEnum, IsUUID } from 'class-validator';
 import { OccurrenceStatus } from '../enums/occurrence-status.enum';
 
 /**
@@ -15,6 +15,14 @@ export class CreateOccurrenceDto {
   @IsNotEmpty()
   @IsString()
   commitment_id: string;
+
+  /**
+   * Reference to the identifier of the user associated with the financial commitment.
+   * Must be a valid UUID.
+   */
+  @IsNotEmpty({ message: 'The user ID must not be empty.' })
+  @IsUUID('4', { message: 'The user ID must be a valid UUID.' })
+  user_id: string;
 
   /**
    * Due date of the occurrence in the format YYYY-MM-DD.
