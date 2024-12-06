@@ -7,6 +7,7 @@ export class CreateOccurrenceDtoFactory {
   static createOccurrence(commitment: Commitment, occurrenceDate: string, amount: number): CreateOccurrenceDto {
     return {
       commitment_id: commitment._id,
+      user_id: commitment.user_id,
       due_date: occurrenceDate,
       amount,
       status: OccurrenceStatus.PENDING,
