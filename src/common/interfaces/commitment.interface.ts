@@ -86,4 +86,10 @@ export interface Commitment {
      * Optional and used for more specific classification within the main category (e.g., "Streaming Services").
      */
     subcategory?: string;
+
+    /**
+     * The identifier of the user associated with the financial commitment.
+     * This is a required field and must be a valid UUID.
+     */
+    user_id: string;
 }
