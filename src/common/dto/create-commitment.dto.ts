@@ -12,7 +12,7 @@ export class CreateCommitmentDto {
   /**
    * Defines the type of financial commitment.
    * Must be one of the values from the CommitmentType enum:
-   * 'fixed', 'recurring', 'one_time', 'installment', or 'planned'.
+   * 'recurring', 'one_time', 'installment'.
    */
   @IsNotEmpty({ message: 'The commitment type must not be empty.' })
   @IsEnum(CommitmentType, { message: 'Invalid commitment type.' })
