@@ -37,11 +37,15 @@ export class CommitmentController {
   @Get('/')
   @HttpCode(HttpStatus.OK)
   async findAll() {
+    const userId = '5cfdcc1c-bd00-42b5-9d57-df20e01da291'; // Exemplo de ID de usuário
+    const month = 1;  // Exemplo de mês
+    const year = 2025; // Exemplo de ano
+
     // 1. Buscar as ocorrências no intervalo especificado
     const occurrences = await this.occurrenceRepository.findByDateRange({
-      userId: '5cfdcc1c-bd00-42b5-9d57-df20e01da291',
-      month: 1,
-      year: 2025
+      userId,
+      month,
+      year
     });
 
     // 2. Extrair os `commitment_id` únicos
@@ -89,13 +93,26 @@ export class CommitmentController {
       return sum + totalPending;
     }, 0);
 
-    // 7. Construir a resposta estruturada com metadados
+    // 7. Criar uma função para formatar o mês e o ano
+    const monthNames = [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+
+    const formattedMonthYear = `${monthNames[month - 1]} ${year}`;
+
+    // 8. Construir a resposta estruturada com as informações de filtro no metadado
     return {
       message: 'Commitments retrieved successfully',
       totalCommitments: data.length,
       totalOccurrences: occurrences.length,
       totalPaidInMonth,
       totalPendingInMonth,
+      context: {
+        month,
+        year,
+        formattedMonthYear
+      },
       commitments: data,
     };
   }
