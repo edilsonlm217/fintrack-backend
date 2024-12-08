@@ -36,4 +36,12 @@ export class CommitmentRepository {
   async deleteOne(id: string) {
     return this.collection.deleteOne({ _id: new ObjectId(id) });
   }
+
+  async findByIds(ids: string[]): Promise<Commitment[]> {
+    // Converte os IDs para ObjectId, pois o MongoDB utiliza esse formato
+    const objectIds = ids.map((id) => new ObjectId(id));
+    
+    // Busca todos os commitments que possuem _id dentro da lista de objectIds
+    return this.collection.find<Commitment>({ _id: { $in: objectIds } }).toArray();
+  }
 }

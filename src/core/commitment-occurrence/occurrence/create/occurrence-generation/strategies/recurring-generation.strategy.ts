@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OccurrenceDateService } from '../submodules/occurrence-date/occurrence-date.service';
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
-import { CreateOccurrenceDtoFactory } from '../../../../../common/factories/create-occurrence-dto.factory';
+import { CreateOccurrenceDtoFactory } from '../../../../../../common/factories/create-occurrence-dto.factory';
 import { GenerationStrategy } from '../interfaces/generation-strategy.interface';
 
 /**

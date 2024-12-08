@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateService } from './create/create.service';
-import { CreateCommitmentDto } from '../../common/dto/create-commitment.dto';
+import { FindService } from './find/find.service';
+import { CreateCommitmentDto } from '../../../common/dto/create-commitment.dto';
 
 /**
  * Service responsible for handling commitment-related business logic.
@@ -16,6 +17,7 @@ export class CommitmentService {
    */
   constructor(
     private readonly createService: CreateService,
+    private readonly findService: FindService,
   ) { }
 
   /**
@@ -28,5 +30,16 @@ export class CommitmentService {
    */
   async create(createCommitmentDto: CreateCommitmentDto) {
     return this.createService.process(createCommitmentDto);
+  }
+
+  /**
+   * Retrieves commitments based on a list of IDs.
+   * 
+   * @param commitmentIds - A list of unique commitment IDs.
+   * 
+   * @returns A promise that resolves to an array of commitments corresponding to the provided IDs.
+   */
+  async findByIds(commitmentIds: string[]) {
+    return this.findService.findByIds(commitmentIds);
   }
 }

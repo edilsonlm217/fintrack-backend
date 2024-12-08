@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { GenerationStrategy } from '../interfaces/generation-strategy.interface';
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
-import { CreateOccurrenceDtoFactory } from '../../../../../common/factories/create-occurrence-dto.factory';
+import { CreateOccurrenceDtoFactory } from '../../../../../../common/factories/create-occurrence-dto.factory';
 
 /**
  * Strategy for generating a one-time occurrence based on a commitment.

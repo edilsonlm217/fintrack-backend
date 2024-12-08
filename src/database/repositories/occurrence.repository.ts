@@ -3,6 +3,12 @@ import { Db, Collection, ObjectId } from 'mongodb';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 
+interface FindByDateRangeParams {
+  userId: string;
+  month: number;
+  year: number;
+}
+
 @Injectable()
 export class OccurrenceRepository {
   private readonly collection: Collection;
@@ -13,8 +19,16 @@ export class OccurrenceRepository {
     this.collection = this.db.collection('financial-occurrences');
   }
 
-  async findAll() {
-    return this.collection.find().toArray();
+  async findByDateRange(params: FindByDateRangeParams) {
+    return this.collection.find<Occurrence>({
+      user_id: params.userId,
+      $expr: {
+        $and: [
+          { $eq: [{ $month: { $dateFromString: { dateString: "$due_date" } } }, params.month] },
+          { $eq: [{ $year: { $dateFromString: { dateString: "$due_date" } } }, params.year] },
+        ],
+      },
+    }).toArray();
   }
 
   async findOne(id: string) {
