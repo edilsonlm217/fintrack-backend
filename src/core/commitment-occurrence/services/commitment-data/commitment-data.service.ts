@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { OccurrenceService } from './occurrence/occurrence.service';
-import { CommitmentService } from './commitment/commitment.service';
-import { UniqueValueExtractor } from './unique-value-extractor';
+import { OccurrenceService } from '../../occurrence/occurrence.service';
+import { CommitmentService } from '../../commitment/commitment.service';
+import { UniqueValueExtractor } from './helpers/unique-value-extractor';
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 
 @Injectable()

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
-import { CommitmentStatsService } from './commitment-stats.service';
-import { DateFormatterService } from './date-formatter.service';
-import { CommitmentDataService } from './commitment-data.service';
-import { CommitmentMapperService } from './commitment-mapper.service';
+import { CommitmentStatsService } from './services/commitment-stats.service';
+import { DateFormatterService } from './services/date-formatter.service';
+import { CommitmentDataService } from './services/commitment-data/commitment-data.service';
+import { CommitmentMapperService } from './services/commitment-mapper/commitment-mapper.service';
 
 @Injectable()
 export class CommitmentOccurrenceService {

@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { CommitmentModule } from './commitment/commitment.module';
 import { OccurrenceModule } from './occurrence/occurrence.module';
 import { CommitmentOccurrenceService } from './commitment-occurrence.service';
-import { CommitmentStatsService } from './commitment-stats.service';
-import { DateFormatterService } from './date-formatter.service';
-import { CommitmentDataService } from './commitment-data.service';
-import { CommitmentMapperService } from './commitment-mapper.service';
+import { CommitmentStatsService } from './services/commitment-stats.service';
+import { DateFormatterService } from './services/date-formatter.service';
+import { CommitmentDataService } from './services/commitment-data/commitment-data.service';
+import { CommitmentMapperService } from './services/commitment-mapper/commitment-mapper.service';
 
 @Module({
   imports: [CommitmentModule, OccurrenceModule],
@@ -15,7 +15,8 @@ import { CommitmentMapperService } from './commitment-mapper.service';
     CommitmentStatsService,
     DateFormatterService,
     CommitmentDataService,
-    CommitmentMapperService
+    CommitmentMapperService,
+    CommitmentMapperService,
   ],
   exports: [CommitmentOccurrenceService]
 })

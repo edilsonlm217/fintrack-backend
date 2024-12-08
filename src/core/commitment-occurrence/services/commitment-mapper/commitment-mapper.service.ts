@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommitmentMapper } from './commitment-mapper';
+import { CommitmentMapper } from './helpers/commitment-mapper';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 
