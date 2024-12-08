@@ -25,12 +25,24 @@ export class CommitmentDataService {
 
   async fetchCommitmentsWithOccurrencesForPeriod(userId: string, month: number, year: number) {
     const { occurrences, commitments } = await this.fetchCommitmentsAndOccurrences(userId, month, year);
-    const data = this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
-    const stats = this.calculateStatistics(data, commitments.length, occurrences.length);
+    const commitmentWithOccurrences = this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
+
+    const {
+      totalPaidInMonth,
+      totalPendingInMonth
+    } = this.commitmentStatsService.calculateTotals(commitmentWithOccurrences);
+
+    const totalCommitments = commitments.length;
+    const totalOccurrences = occurrences.length;
+
     const formattedMonthYear = this.dateFormatterService.formatMonthYear(month, year);
 
     return {
-      ...stats,
+      data: commitmentWithOccurrences,
+      totalPaidInMonth,
+      totalPendingInMonth,
+      totalCommitments,
+      totalOccurrences,
       formattedMonthYear,
     };
   }
@@ -39,19 +51,6 @@ export class CommitmentDataService {
     const occurrences = await this.occurrenceService.findByDateRange(userId, month, year);
     const uniqueCommitmentIds = UniqueValueExtractor.extractUniqueValues(occurrences, 'commitment_id');
     const commitments = await this.commitmentService.findByIds(uniqueCommitmentIds);
-
     return { commitments, occurrences };
-  }
-
-  private calculateStatistics(data, totalCommitments: number, totalOccurrences: number) {
-    const { totalPaidInMonth, totalPendingInMonth } = this.commitmentStatsService.calculateTotals(data);
-
-    return {
-      data,
-      totalPaidInMonth,
-      totalPendingInMonth,
-      totalCommitments,
-      totalOccurrences,
-    };
   }
 }
