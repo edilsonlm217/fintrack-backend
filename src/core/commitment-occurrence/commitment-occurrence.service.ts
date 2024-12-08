@@ -1,45 +1,56 @@
 import { Injectable } from '@nestjs/common';
-import { OccurrenceService } from './occurrence/occurrence.service';
-import { CommitmentService } from './commitment/commitment.service';
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 import { CommitmentStatsService } from './commitment-stats.service';
 import { DateFormatterService } from './date-formatter.service';
-import { UniqueValueExtractor } from './unique-value-extractor';
-import { CommitmentMapper } from './commitment-mapper';
+import { CommitmentDataService } from './commitment-data.service';
+import { CommitmentMapperService } from './commitment-mapper.service';
 
 @Injectable()
 export class CommitmentOccurrenceService {
   constructor(
-    private readonly commitmentService: CommitmentService,
-    private readonly occurrenceService: OccurrenceService,
     private readonly commitmentStatsService: CommitmentStatsService,
+    private readonly commitmentDataService: CommitmentDataService,
+    private readonly commitmentMapperService: CommitmentMapperService,
     private readonly dateFormatterService: DateFormatterService,
-  ) { }
+  ) {}
 
   async createCommitment(createCommitmentDto: CreateCommitmentDto) {
-    const commitment = await this.commitmentService.create(createCommitmentDto);
-    const occurrences = await this.occurrenceService.create(commitment);
-    return { commitment, occurrences };
+    return this.commitmentDataService.createCommitment(createCommitmentDto);
   }
 
   async fetchCommitmentData(userId: string, month: number, year: number) {
-    const occurrences = await this.occurrenceService.findByDateRange(userId, month, year);
-    const uniqueCommitmentIds = UniqueValueExtractor.extractUniqueValues(occurrences, 'commitment_id');
-    const commitments = await this.commitmentService.findByIds(uniqueCommitmentIds);
-    const occurrencesByCommitment = CommitmentMapper.mapOccurrencesToCommitments(occurrences);
-    const data = CommitmentMapper.mergeCommitmentsWithOccurrences(commitments, occurrencesByCommitment);
+    const { commitments, occurrences } = await this.fetchData(userId, month, year);
+    const data = this.mapCommitmentsWithOccurrences(commitments, occurrences);
+    const stats = this.calculateStatistics(data, commitments.length, occurrences.length);
+    return this.formatResponse(stats, month, year);
+  }
+
+  private async fetchData(userId: string, month: number, year: number) {
+    return this.commitmentDataService.fetchCommitmentsAndOccurrences(userId, month, year);
+  }
+
+  private mapCommitmentsWithOccurrences(commitments, occurrences) {
+    return this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
+  }
+
+  private calculateStatistics(data, totalCommitments: number, totalOccurrences: number) {
     const { totalPaidInMonth, totalPendingInMonth } = this.commitmentStatsService.calculateTotals(data);
-    const formattedMonthYear = this.dateFormatterService.formatMonthYear(month, year);
-    const totalOccurrences = occurrences.length;
-    const totalCommitments = commitments.length;
 
     return {
       data,
       totalPaidInMonth,
       totalPendingInMonth,
-      formattedMonthYear,
+      totalCommitments,
       totalOccurrences,
-      totalCommitments
-    }
+    };
+  }
+
+  private formatResponse(stats, month: number, year: number) {
+    const formattedMonthYear = this.dateFormatterService.formatMonthYear(month, year);
+
+    return {
+      ...stats,
+      formattedMonthYear,
+    };
   }
 }
