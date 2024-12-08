@@ -17,6 +17,8 @@ export class CommitmentStatsService {
       return sum + totalPending;
     }, 0);
 
-    return { totalPaidInMonth, totalPendingInMonth };
+    const totalCommitments = commitments.length;
+
+    return { totalPaidInMonth, totalPendingInMonth, totalCommitments };
   }
 }
