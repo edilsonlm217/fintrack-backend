@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CommitmentController } from './commitment.controller';
+import { CoreModule } from 'src/core/core.module';
 
 @Module({
-  imports: [],
+  imports: [CoreModule],
   controllers: [CommitmentController],
   providers: [],
   exports: []

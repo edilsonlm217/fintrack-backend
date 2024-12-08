@@ -11,7 +11,6 @@ import { CoreModule } from './core/core.module';
   imports: [
     MongoModule,
     CommitmentModule,
-    CoreModule,
   ],
   controllers: [AppController],
   providers: [AppService],
