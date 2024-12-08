@@ -37,7 +37,7 @@ export class CommitmentController {
       totalOccurrences,
       totalCommitments,
       formattedMonthYear,
-    } = await this.commitmentOccurrenceService.fetchCommitmentData(userId, month, year);
+    } = await this.commitmentOccurrenceService.fetchCommitmentsWithOccurrencesForPeriod(userId, month, year);
 
     return {
       message: 'Commitments retrieved successfully',
