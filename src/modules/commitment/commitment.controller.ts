@@ -33,18 +33,14 @@ export class CommitmentController {
     @Query('year') year: number
   ) {
     const commitments = await this.commitmentOccurrenceService.fetchCommitmentsWithOccurrencesForPeriod(userId, month, year);
-    const totals = this.commitmentOccurrenceService.calculateTotals(commitments);
 
     return {
       message: 'Commitments retrieved successfully',
-      totalCommitments: totals.totalCommitments,
-      totalPaidInMonth: totals.totalPaidInMonth,
-      totalPendingInMonth: totals.totalPendingInMonth,
-      commitments,
       context: {
         month,
         year,
       },
+      commitments,
     };
   }
 }

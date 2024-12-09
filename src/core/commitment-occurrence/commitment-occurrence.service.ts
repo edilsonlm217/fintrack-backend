@@ -6,7 +6,6 @@ import { UniqueValueExtractor } from './services/unique-value-extractor';
 import { CommitmentStatsService } from './services/commitment-stats/commitment-stats.service';
 
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
-import { CommitmentWithOccurrences } from 'src/common/interfaces/commitments-with-occurrences.interface';
 
 @Injectable()
 export class CommitmentOccurrenceService {
@@ -28,9 +27,5 @@ export class CommitmentOccurrenceService {
     const uniqueCommitmentIds = UniqueValueExtractor.extractUniqueValues(occurrences, 'commitment_id');
     const commitments = await this.commitmentService.findByIds(uniqueCommitmentIds);
     return this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
-  }
-
-  calculateTotals(commitments: CommitmentWithOccurrences[]) {
-    return this.commitmentStatsService.calculateTotals(commitments);
   }
 }
