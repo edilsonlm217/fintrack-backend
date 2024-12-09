@@ -1,12 +1,7 @@
 import { Commitment } from 'src/common/interfaces/commitment.interface';
+import { CommitmentWithOccurrences } from 'src/common/interfaces/commitments-with-occurrences.interface';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
-
-export type CommitmentWithOccurrences = Omit<Commitment, 'amount' | 'due_date' | 'start_date' | 'end_date' | 'installments' | 'current_installment'> & {
-  occurrences: Array<Omit<Occurrence, 'commitment_id'>>;
-};
-
-export type OccurrencesByCommitmentId = Record<string, Omit<Occurrence, 'commitment_id'>[]>;
-
+import { OccurrencesByCommitmentId } from '../interfaces/occurrences-by-commitment-id.interface';
 
 export class CommitmentMapper {
   /**
