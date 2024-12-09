@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CommitmentRetrievalService } from './commitment-retrieval/commitment-retrieval.service';
+import { CommitmentRepository } from 'src/database/repositories/commitment.repository';
 
 @Injectable()
-export class FindService {
-  constructor(private readonly commitmentRetrievalService: CommitmentRetrievalService) { }
+export class CommitmentRetrievalService {
+  constructor(private readonly commitmentRepository: CommitmentRepository) { }
 
   /**
    * Retrieves commitments based on a list of IDs.
@@ -15,6 +15,6 @@ export class FindService {
    * @returns A Promise resolving to an array of commitments that match the provided IDs.
    */
   async findByIds(commitmentIds: string[]) {
-    return this.commitmentRetrievalService.findByIds(commitmentIds);
+    return this.commitmentRepository.findByIds(commitmentIds);
   }
 }

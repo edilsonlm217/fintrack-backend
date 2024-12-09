@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Occurrence } from 'src/common/interfaces/occurrence.interface';
-import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
+import { OccurrenceRetrievalService } from './occurrence-retrieval/occurrence-retrieval.service';
 
 @Injectable()
 export class FindService {
-  constructor(private readonly occurrenceRepository: OccurrenceRepository) { }
+  constructor(private readonly ocurrenceRetrievalService: OccurrenceRetrievalService) { }
 
-  async findByDateRange(userId: string, month: number, year: number): Promise<Occurrence[]> {
-    return this.occurrenceRepository.findByDateRange({
-      userId,
-      month,
-      year,
-    });
+  async findByDateRange(userId: string, month: number, year: number) {
+    return this.ocurrenceRetrievalService.findByDateRange(userId, month, year);
   }
 }
