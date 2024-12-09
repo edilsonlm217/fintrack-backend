@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 import { OccurrenceService } from './occurrence/occurrence.service';
 import { CommitmentService } from './commitment/commitment.service';
 import { CommitmentMapperService } from './services/commitment-mapper/commitment-mapper.service';
 import { UniqueValueExtractor } from './services/unique-value-extractor';
+import { CommitmentStatsService } from './services/commitment-stats/commitment-stats.service';
+
+import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
+import { CommitmentWithOccurrences } from 'src/common/interfaces/commitments-with-occurrences.interface';
 
 @Injectable()
 export class CommitmentOccurrenceService {
@@ -11,6 +14,7 @@ export class CommitmentOccurrenceService {
     private readonly occurrenceService: OccurrenceService,
     private readonly commitmentService: CommitmentService,
     private readonly commitmentMapperService: CommitmentMapperService,
+    private readonly commitmentStatsService: CommitmentStatsService,
   ) { }
 
   async createCommitment(createCommitmentDto: CreateCommitmentDto) {
@@ -24,5 +28,9 @@ export class CommitmentOccurrenceService {
     const uniqueCommitmentIds = UniqueValueExtractor.extractUniqueValues(occurrences, 'commitment_id');
     const commitments = await this.commitmentService.findByIds(uniqueCommitmentIds);
     return this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
+  }
+
+  calculateTotals(commitments: CommitmentWithOccurrences[]) {
+    return this.commitmentStatsService.calculateTotals(commitments);
   }
 }

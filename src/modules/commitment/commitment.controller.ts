@@ -5,14 +5,11 @@ import { CreateCommitmentResponse } from './interfaces/create-commitment-respons
 
 import { CommitmentExceptionFilter } from './commitment.exception.filter';
 import { CommitmentOccurrenceService } from 'src/core/commitment-occurrence/commitment-occurrence.service';
-import { DateFormatterHelper } from './date-formatter.helper';
-import { CommitmentStatsService } from './services/commitment-stats.service';
 
 @Controller('commitments')
 export class CommitmentController {
   constructor(
-    private readonly commitmentOccurrenceService: CommitmentOccurrenceService,
-    private readonly commitmentStatsService: CommitmentStatsService,
+    private readonly commitmentOccurrenceService: CommitmentOccurrenceService
   ) { }
 
   @Post('/')
@@ -36,17 +33,13 @@ export class CommitmentController {
     @Query('year') year: number
   ) {
     const commitments = await this.commitmentOccurrenceService.fetchCommitmentsWithOccurrencesForPeriod(userId, month, year);
-    const {
-      totalPaidInMonth,
-      totalPendingInMonth,
-      totalCommitments
-    } = this.commitmentStatsService.calculateTotals(commitments);
+    const totals = this.commitmentOccurrenceService.calculateTotals(commitments);
 
     return {
       message: 'Commitments retrieved successfully',
-      totalCommitments,
-      totalPaidInMonth,
-      totalPendingInMonth,
+      totalCommitments: totals.totalCommitments,
+      totalPaidInMonth: totals.totalPaidInMonth,
+      totalPendingInMonth: totals.totalPendingInMonth,
       commitments,
       context: {
         month,
