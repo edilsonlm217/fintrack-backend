@@ -27,12 +27,12 @@ export class CommitmentController {
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
-  async findAll(
+  async findByPeriod(
     @Headers('userId') userId: string,
     @Query('month') month: number,
     @Query('year') year: number
   ) {
-    const commitments = await this.commitmentOccurrenceService.fetchCommitmentsWithOccurrencesForPeriod(userId, month, year);
+    const commitments = await this.commitmentOccurrenceService.findCommitmentsByPeriod(userId, month, year);
 
     return {
       message: 'Commitments retrieved successfully',
