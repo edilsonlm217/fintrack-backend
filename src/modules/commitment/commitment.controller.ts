@@ -1,10 +1,14 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UseFilters, Get, Query, Headers } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseFilters, Get, Query } from '@nestjs/common';
+
+import { CommitmentOccurrenceService } from '../../core/commitment-occurrence/commitment-occurrence.service';
 
 import { CreateCommitmentDto } from '../../common/dto/create-commitment.dto';
 import { CreateCommitmentResponse } from './interfaces/create-commitment-response.interface';
+import { FindCommitmentsByPeriodDto } from '../../common/dto/find-commitments-by-period.dto';
+import { FindCommitmentsByPeriodResponse } from './interfaces/find-commitments-by-period-response.interface';
 
 import { CommitmentExceptionFilter } from './commitment.exception.filter';
-import { CommitmentOccurrenceService } from 'src/core/commitment-occurrence/commitment-occurrence.service';
+
 
 @Controller('commitments')
 export class CommitmentController {
@@ -28,17 +32,20 @@ export class CommitmentController {
   @Get('/')
   @HttpCode(HttpStatus.OK)
   async findByPeriod(
-    @Headers('userId') userId: string,
-    @Query('month') month: number,
-    @Query('year') year: number
-  ) {
-    const commitments = await this.commitmentOccurrenceService.findCommitmentsByPeriod(userId, month, year);
+    @Query() query: FindCommitmentsByPeriodDto
+  ): Promise<FindCommitmentsByPeriodResponse> {
+    const commitments = await this.commitmentOccurrenceService.findCommitmentsByPeriod(
+      query.userId,
+      query.month,
+      query.year
+    );
 
     return {
       message: 'Commitments retrieved successfully',
       context: {
-        month,
-        year,
+        month: query.month,
+        year: query.year,
+        userId: query.userId
       },
       commitments,
     };
