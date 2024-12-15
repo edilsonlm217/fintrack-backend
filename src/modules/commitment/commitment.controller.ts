@@ -31,6 +31,7 @@ export class CommitmentController {
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
+  @UseFilters(CommitmentExceptionFilter)
   async findByPeriod(
     @Query() query: FindCommitmentsByPeriodDto
   ): Promise<FindCommitmentsByPeriodResponse> {
