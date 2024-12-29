@@ -26,4 +26,11 @@ export class CommitmentOccurrenceService {
     const commitments = await this.commitmentService.findByIds(uniqueCommitmentIds);
     return this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
   }
+
+  async findAllByDateRange(userId: string, startDate: string, endDate: string) {
+    const occurrences = await this.occurrenceService.findAllByDateRange(userId, startDate, endDate);
+    const uniqueCommitmentIds = UniqueValueExtractor.extractUniqueValues(occurrences, 'commitment_id');
+    const commitments = await this.commitmentService.findByIds(uniqueCommitmentIds);
+    return this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
+  }
 }
