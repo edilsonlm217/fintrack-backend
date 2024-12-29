@@ -51,4 +51,25 @@ export class CommitmentController {
       commitments,
     };
   }
+
+  @Get('/by-date-range')
+  @HttpCode(HttpStatus.OK)
+  @UseFilters(CommitmentExceptionFilter)
+  async findAllByDateRange(@Query() query: FindCommitmentsByDateRangeDto) {
+    const commitments = await this.commitmentOccurrenceService.findAllByDateRange(
+      query.userId,
+      query.startDate,
+      query.endDate
+    );
+
+    return {
+      message: 'Commitments retrieved successfully',
+      context: {
+        startDate: query.startDate,
+        endDate: query.endDate,
+        userId: query.userId,
+      },
+      commitments,
+    };
+  }
 }
