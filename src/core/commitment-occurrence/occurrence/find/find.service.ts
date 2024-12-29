@@ -5,7 +5,11 @@ import { OccurrenceRetrievalService } from './occurrence-retrieval/occurrence-re
 export class FindService {
   constructor(private readonly ocurrenceRetrievalService: OccurrenceRetrievalService) { }
 
-  async findByDateRange(userId: string, month: number, year: number) {
-    return this.ocurrenceRetrievalService.findByDateRange(userId, month, year);
+  async findAllByMonth(userId: string, month: number, year: number) {
+    return this.ocurrenceRetrievalService.findAllByMonth(userId, month, year);
+  }
+
+  async findAllByDateRange(userId: string, startDate: string, endDate: string) {
+    return this.ocurrenceRetrievalService.findAllByDateRange(userId, startDate, endDate);
   }
 }

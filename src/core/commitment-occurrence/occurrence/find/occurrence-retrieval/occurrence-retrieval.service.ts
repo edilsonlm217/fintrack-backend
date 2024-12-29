@@ -5,11 +5,11 @@ import { OccurrenceRepository } from 'src/database/repositories/occurrence.repos
 export class OccurrenceRetrievalService {
   constructor(private readonly occurrenceRepository: OccurrenceRepository) { }
 
-  async findByDateRange(userId: string, month: number, year: number) {
-    return this.occurrenceRepository.findByDateRange({
-      userId,
-      month,
-      year,
-    });
+  async findAllByMonth(userId: string, month: number, year: number) {
+    return this.occurrenceRepository.findAllByMonth({ userId, month, year });
+  }
+
+  async findAllByDateRange(userId: string, startDate: string, endDate: string) {
+    return this.occurrenceRepository.findAllByDateRange({ userId, startDate, endDate });
   }
 }

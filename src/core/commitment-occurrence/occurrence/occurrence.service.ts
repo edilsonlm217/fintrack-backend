@@ -39,7 +39,11 @@ export class OccurrenceService {
    * @param year - The year for filtering occurrences.
    * @returns A Promise resolving to an array of occurrences within the specified range.
    */
-  async findByDateRange(userId: string, month: number, year: number): Promise<Occurrence[]> {
-    return this.findService.findByDateRange(userId, month, year);
+  async findAllByMonth(userId: string, month: number, year: number): Promise<Occurrence[]> {
+    return this.findService.findAllByMonth(userId, month, year);
+  }
+
+  async findAllByDateRange(userId: string, startDate: string, endDate: string) {
+    return this.findService.findAllByDateRange(userId, startDate, endDate);
   }
 }
