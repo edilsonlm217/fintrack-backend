@@ -2,12 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Db, Collection, ObjectId } from 'mongodb';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
-
-interface FindByDateRangeParams {
-  userId: string;
-  month: number;
-  year: number;
-}
+import { FindAllByMonthParams } from './interfaces/find-all-by-month.interface';
+import { FindAllByDateRangeParams } from './interfaces/find-all-by-date-range.interface';
 
 @Injectable()
 export class OccurrenceRepository {
@@ -19,7 +15,7 @@ export class OccurrenceRepository {
     this.collection = this.db.collection('financial-occurrences');
   }
 
-  async findByDateRange(params: FindByDateRangeParams) {
+  async findAllByMonth(params: FindAllByMonthParams) {
     return this.collection.find<Occurrence>({
       user_id: params.userId,
       $expr: {
@@ -28,6 +24,16 @@ export class OccurrenceRepository {
           { $eq: [{ $year: { $dateFromString: { dateString: "$due_date" } } }, params.year] },
         ],
       },
+    }).toArray();
+  }
+
+  async findAllByDateRange(params: FindAllByDateRangeParams) {
+    return this.collection.find<Occurrence>({
+      user_id: params.userId,
+      $and: [
+        { due_date: { $gte: params.startDate } },
+        { due_date: { $lte: params.endDate } },
+      ],
     }).toArray();
   }
 
