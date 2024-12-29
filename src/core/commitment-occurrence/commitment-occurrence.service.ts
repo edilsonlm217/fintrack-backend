@@ -20,8 +20,8 @@ export class CommitmentOccurrenceService {
     return { commitment, occurrences };
   }
 
-  async findCommitmentsByPeriod(userId: string, month: number, year: number) {
-    const occurrences = await this.occurrenceService.findByDateRange(userId, month, year);
+  async findAllByMonth(userId: string, month: number, year: number) {
+    const occurrences = await this.occurrenceService.findAllByMonth(userId, month, year);
     const uniqueCommitmentIds = UniqueValueExtractor.extractUniqueValues(occurrences, 'commitment_id');
     const commitments = await this.commitmentService.findByIds(uniqueCommitmentIds);
     return this.commitmentMapperService.mapCommitmentsWithOccurrences(commitments, occurrences);
