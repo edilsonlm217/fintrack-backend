@@ -8,7 +8,7 @@ import { FindCommitmentsByPeriodDto } from '../../common/dto/find-commitments-by
 import { FindCommitmentsByPeriodResponse } from './interfaces/find-commitments-by-period-response.interface';
 
 import { CommitmentExceptionFilter } from './commitment.exception.filter';
-
+import { FindCommitmentsByDateRangeDto } from 'src/common/dto/find-commitments-by-date-range.dto';
 
 @Controller('commitments')
 export class CommitmentController {
@@ -29,13 +29,13 @@ export class CommitmentController {
     };
   }
 
-  @Get('/')
+  @Get('/by-month')
   @HttpCode(HttpStatus.OK)
   @UseFilters(CommitmentExceptionFilter)
-  async findByPeriod(
+  async findAllByMonth(
     @Query() query: FindCommitmentsByPeriodDto
   ): Promise<FindCommitmentsByPeriodResponse> {
-    const commitments = await this.commitmentOccurrenceService.findCommitmentsByPeriod(
+    const commitments = await this.commitmentOccurrenceService.findAllByMonth(
       query.userId,
       query.month,
       query.year
