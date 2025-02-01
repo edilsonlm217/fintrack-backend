@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { MongoModule } from './database/mongo.module';
+import { MongoModule } from './database/mongo/mongo.module';
 import { CommitmentModule } from './modules/commitment/commitment.module';
 
 import { AppController } from './app.controller';
