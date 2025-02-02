@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommitmentRepository } from 'src/database/mongo/repositories/commitment.repository';
+import { CommitmentRepository } from 'src/database/neo4j/repositories/commitment.repository';
 
 @Injectable()
 export class CommitmentRetrievalService {
