@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 
 import { createNeo4jConnection } from './config/neo4j.config';
 
 import { CommitmentRepository } from './repositories/commitment.repository';
 import { OccurrenceRepository } from './repositories/occurrence.repository';
 
+@Global()
 @Module({
   providers: [
     {
