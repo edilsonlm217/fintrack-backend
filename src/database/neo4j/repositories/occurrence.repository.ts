@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Driver } from 'neo4j-driver';
 import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 import { Occurrence } from 'src/common/interfaces/occurrence.interface';
+import { INSERT_MANY_OCCURRENCES } from '../queries/occurrence.queries';
 
 @Injectable()
 export class OccurrenceRepository {
@@ -15,22 +16,8 @@ export class OccurrenceRepository {
 
     try {
       const result = await session.executeWrite(async (tx) => {
-        const query = `
-          UNWIND $occurrences AS occurrence
-          MATCH (c:Commitment)
-          WHERE elementId(c) = occurrence.commitment_id
-          CREATE (o:Occurrence)
-          SET o = occurrence
-          WITH o, c
-          CREATE (o)-[:INSTANCE_OF]->(c)
-          RETURN o {
-            .*,
-            _id: elementId(o)
-          }
-        `;
-
-        const response = await tx.run(query, { occurrences });
-        return response.records.map(record => record.get('o'));
+        const response = await tx.run(INSERT_MANY_OCCURRENCES, { occurrences });
+        return response.records.map(record => record.get('o').properties);
       });
 
       return result;
