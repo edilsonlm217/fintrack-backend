@@ -4,6 +4,8 @@ import { Driver } from 'neo4j-driver';
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
 
+import { CREATE_COMMITMENT } from '../queries/commitment.queries';
+
 @Injectable()
 export class CommitmentRepository {
   constructor(
@@ -13,22 +15,11 @@ export class CommitmentRepository {
 
   async insertOne(commitment: Partial<CreateCommitmentDto>) {
     const session = this.neo4jDriver.session();
-
     try {
-      const result = await session.executeWrite(tx => tx.run(`
-        CREATE (c:Commitment)
-        SET c = $props
-        RETURN c {
-          .*,
-          _id: elementId(c)
-        }
-      `, {
+      const result = await session.executeWrite(tx => tx.run(CREATE_COMMITMENT, {
         props: commitment
       }));
-
       return result.records[0].get('c') as Commitment;
-    } catch (error) {
-      throw error;
     } finally {
       await session.close();
     }
