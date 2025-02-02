@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommitmentPersistenceStrategy } from '../interfaces/commitment-persistence-strategy.interface';
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
-import { CommitmentRepository } from 'src/database/mongo/repositories/commitment.repository';
+import { CommitmentRepository } from 'src/database/neo4j/repositories/commitment.repository';
 
 /**
  * Strategy for persisting one-time financial commitments.
