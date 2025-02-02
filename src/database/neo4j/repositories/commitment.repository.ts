@@ -20,6 +20,8 @@ export class CommitmentRepository {
         props: commitment
       }));
       return result.records[0].get('c') as Commitment;
+    } catch (error) {
+      throw error;
     } finally {
       await session.close();
     }

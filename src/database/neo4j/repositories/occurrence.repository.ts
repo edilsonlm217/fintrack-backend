@@ -21,6 +21,8 @@ export class OccurrenceRepository {
       });
 
       return result;
+    } catch (error) {
+      throw error;
     } finally {
       await session.close();
     }
