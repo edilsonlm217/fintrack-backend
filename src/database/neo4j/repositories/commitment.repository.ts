@@ -13,21 +13,36 @@ export class CommitmentRepository {
 
   async insertOne(commitment: Partial<CreateCommitmentDto>) {
     const session = this.neo4jDriver.session();
-    const result = await session.executeWrite(tx => tx.run(`
-      CREATE (c:Commitment)
-      SET c = $props
-      RETURN c {
-        .*,
-        _id: elementId(c)
-      }
-    `, {
-      props: commitment
-    }));
 
-    return result.records[0].get('c') as Commitment;
+    try {
+      const result = await session.executeWrite(tx => tx.run(`
+        CREATE (c:Commitment)
+        SET c = $props
+        RETURN c {
+          .*,
+          _id: elementId(c)
+        }
+      `, {
+        props: commitment
+      }));
+
+      return result.records[0].get('c') as Commitment;
+    } catch (error) {
+      throw error;
+    } finally {
+      await session.close();
+    }
   }
 
-  findByIds(commitmentIds: string[]): Promise<Commitment[]> {
-    throw new Error('Method not implemented.');
+  async findByIds(commitmentIds: string[]): Promise<Commitment[]> {
+    const session = this.neo4jDriver.session();
+
+    try {
+      throw new Error('Method not implemented.');
+    } catch (error) {
+      throw error;
+    } finally {
+      await session.close();
+    }
   }
 }
