@@ -39,11 +39,27 @@ export class OccurrenceRepository {
     }
   }
 
-  findAllByDateRange(arg0: { userId: string; startDate: string; endDate: string; }): Promise<Occurrence[]> {
-    throw new Error('Method not implemented.');
+  async findAllByDateRange(arg0: { userId: string; startDate: string; endDate: string; }): Promise<Occurrence[]> {
+    const session = this.neo4jDriver.session();
+
+    try {
+      throw new Error('Method not implemented.');
+    } catch (error) {
+      throw error;
+    } finally {
+      await session.close();
+    }
   }
 
-  findAllByMonth(arg0: { userId: string; month: number; year: number; }): Promise<Occurrence[]> {
-    throw new Error('Method not implemented.');
+  async findAllByMonth(arg0: { userId: string; month: number; year: number; }): Promise<Occurrence[]> {
+    const session = this.neo4jDriver.session();
+
+    try {
+      throw new Error('Method not implemented.');
+    } catch (error) {
+      throw error;
+    } finally {
+      await session.close();
+    }
   }
 }
