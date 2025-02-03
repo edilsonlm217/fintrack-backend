@@ -1,10 +1,11 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CommitmentOccurrenceModule } from './commitment-occurrence/commitment-occurrence.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [CommitmentOccurrenceModule],
+  imports: [CommitmentOccurrenceModule, UserModule],
   controllers: [],
   providers: [],
-  exports: [CommitmentOccurrenceModule]
+  exports: [CommitmentOccurrenceModule, UserModule]
 })
 export class CoreModule { }
