@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Driver } from "neo4j-driver";
+import { User } from "src/common/interfaces/user.interface";
 
 @Injectable()
 export class UserRepository {
@@ -14,7 +15,7 @@ export class UserRepository {
     try {
       const result = await session.executeWrite(async (tx) => {
         const response = await tx.run(MERGE_USER, { user_id });
-        return response.records[0].get("u").properties;
+        return response.records[0].get("u").properties as User;
       });
 
       return result;
