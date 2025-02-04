@@ -4,6 +4,7 @@ import { createNeo4jConnection } from './config/neo4j.config';
 
 import { CommitmentRepository } from './repositories/commitment.repository';
 import { OccurrenceRepository } from './repositories/occurrence.repository';
+import { UserRepository } from './repositories/user.repository';
 
 @Global()
 @Module({
@@ -14,7 +15,8 @@ import { OccurrenceRepository } from './repositories/occurrence.repository';
     },
     CommitmentRepository,
     OccurrenceRepository,
+    UserRepository,
   ],
-  exports: ['NEO4J_CONNECTION', CommitmentRepository, OccurrenceRepository],
+  exports: ['NEO4J_CONNECTION', CommitmentRepository, OccurrenceRepository, UserRepository],
 })
 export class Neo4jModule { }
