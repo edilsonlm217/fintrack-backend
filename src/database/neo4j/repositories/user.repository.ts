@@ -2,6 +2,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Driver } from "neo4j-driver";
 import { User } from "src/common/interfaces/user.interface";
 
+import { MERGE_USER } from "../queries/user.queries";
+
 @Injectable()
 export class UserRepository {
   constructor(
