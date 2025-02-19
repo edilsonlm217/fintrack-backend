@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { OccurrenceRepository } from 'src/database/repositories/occurrence.repository';
+import { OccurrenceRepository } from 'src/database/mongodb/repositories/occurrence.repository';
 
 @Injectable()
 export class OccurrenceRetrievalService {
