@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { createNeo4jDriver } from './neo4j.factory';
 import { CommitmentRepository } from './repositories/commitment.repository';
+import { OccurrenceRepository } from './repositories/occurrence.repository';
 
+@Global()
 @Module({
   imports: [ConfigModule.forRoot()],
   providers: [
@@ -14,7 +16,12 @@ import { CommitmentRepository } from './repositories/commitment.repository';
       inject: [ConfigService],
     },
     CommitmentRepository,
+    OccurrenceRepository,
   ],
-  exports: ['NEO4J_DRIVER'],
+  exports: [
+    'NEO4J_DRIVER',
+    CommitmentRepository,
+    OccurrenceRepository,
+  ],
 })
 export class Neo4jModule { }
