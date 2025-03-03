@@ -17,14 +17,6 @@ export class CreateOccurrenceDto {
   commitment_id: string;
 
   /**
-   * Reference to the identifier of the user associated with the financial commitment.
-   * Must be a valid UUID.
-   */
-  @IsNotEmpty({ message: 'The user ID must not be empty.' })
-  @IsUUID('4', { message: 'The user ID must be a valid UUID.' })
-  user_id: string;
-
-  /**
    * Due date of the occurrence in the format YYYY-MM-DD.
    * This field must be a non-empty string.
    */
