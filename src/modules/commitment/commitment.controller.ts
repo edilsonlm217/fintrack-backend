@@ -28,48 +28,4 @@ export class CommitmentController {
       occurrences
     };
   }
-
-  @Get('/by-month')
-  @HttpCode(HttpStatus.OK)
-  @UseFilters(CommitmentExceptionFilter)
-  async findAllByMonth(
-    @Query() query: FindCommitmentsByPeriodDto
-  ): Promise<FindCommitmentsByPeriodResponse> {
-    const commitments = await this.commitmentOccurrenceService.findAllByMonth(
-      query.userId,
-      query.month,
-      query.year
-    );
-
-    return {
-      message: 'Commitments retrieved successfully',
-      context: {
-        month: query.month,
-        year: query.year,
-        userId: query.userId
-      },
-      commitments,
-    };
-  }
-
-  @Get('/by-date-range')
-  @HttpCode(HttpStatus.OK)
-  @UseFilters(CommitmentExceptionFilter)
-  async findAllByDateRange(@Query() query: FindCommitmentsByDateRangeDto) {
-    const commitments = await this.commitmentOccurrenceService.findAllByDateRange(
-      query.userId,
-      query.startDate,
-      query.endDate
-    );
-
-    return {
-      message: 'Commitments retrieved successfully',
-      context: {
-        startDate: query.startDate,
-        endDate: query.endDate,
-        userId: query.userId,
-      },
-      commitments,
-    };
-  }
 }
