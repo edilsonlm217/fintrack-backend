@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UseFilters, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseFilters } from '@nestjs/common';
 
 import { CommitmentOccurrenceService } from '../../core/commitment-occurrence/commitment-occurrence.service';
 
