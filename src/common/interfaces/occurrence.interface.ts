@@ -7,7 +7,7 @@ export interface Occurrence {
   /**
    * Unique identifier for the occurrence.
    */
-  _id: string;
+  id: string;
 
   /**
    * Identifier for the associated commitment.
