@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { Inject } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Driver } from 'neo4j-driver';
 import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 import { Commitment } from 'src/common/interfaces/commitment.interface';
