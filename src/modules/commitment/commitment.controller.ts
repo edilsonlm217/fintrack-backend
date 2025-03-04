@@ -6,6 +6,7 @@ import { CreateCommitmentDto } from '../../common/dto/create-commitment.dto';
 import { CreateCommitmentResponse } from './interfaces/create-commitment-response.interface';
 
 import { CommitmentExceptionFilter } from './commitment.exception.filter';
+import { CreateCommitmentRequestDto } from './interfaces/create-commitment-request.dto';
 
 @Controller('commitments')
 export class CommitmentController {
@@ -16,8 +17,8 @@ export class CommitmentController {
   @Post('/')
   @HttpCode(HttpStatus.CREATED)
   @UseFilters(CommitmentExceptionFilter)
-  async createCommitment(@Body() createCommitmentDto: CreateCommitmentDto): Promise<CreateCommitmentResponse> {
-    const { commitment, occurrences } = await this.commitmentOccurrenceService.createCommitment(createCommitmentDto);
+  async createCommitment(@Body() createCommitmentRequestDto: CreateCommitmentRequestDto): Promise<CreateCommitmentResponse> {
+    const { commitment, occurrences } = await this.commitmentOccurrenceService.createCommitment(createCommitmentRequestDto);
 
     return {
       message: 'Commitment successfully created',

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
+import { CreateCommitmentRequestDto } from 'src/modules/commitment/interfaces/create-commitment-request.dto';
 import { CommitmentType } from 'src/common/enums/commitment-type.enum';
 
 import { CommitmentPersistenceStrategy } from './interfaces/commitment-persistence-strategy.interface';
@@ -42,11 +42,11 @@ export class CommitmentPersistenceService {
    * 
    * @throws Error if no strategy is found for the provided commitment type.
    */
-  async process(createCommitmentDto: CreateCommitmentDto) {
-    const strategy = this.strategies[createCommitmentDto.type];
+  async process(createCommitmentRequestDto: CreateCommitmentRequestDto) {
+    const strategy = this.strategies[createCommitmentRequestDto.type];
     if (!strategy) {
-      throw new Error(`Strategy not found for type ${createCommitmentDto.type}`);
+      throw new Error(`Strategy not found for type ${createCommitmentRequestDto.type}`);
     }
-    return strategy.process(createCommitmentDto);
+    return strategy.process(createCommitmentRequestDto);
   }
 }

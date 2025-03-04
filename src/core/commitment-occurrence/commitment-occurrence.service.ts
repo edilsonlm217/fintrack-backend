@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OccurrenceService } from './occurrence/occurrence.service';
 import { CommitmentService } from './commitment/commitment.service';
 
-import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
+import { CreateCommitmentRequestDto } from 'src/modules/commitment/interfaces/create-commitment-request.dto';
 
 @Injectable()
 export class CommitmentOccurrenceService {
@@ -11,8 +11,8 @@ export class CommitmentOccurrenceService {
     private readonly commitmentService: CommitmentService,
   ) { }
 
-  async createCommitment(createCommitmentDto: CreateCommitmentDto) {
-    const commitment = await this.commitmentService.create(createCommitmentDto);
+  async createCommitment(createCommitmentRequestDto: CreateCommitmentRequestDto) {
+    const commitment = await this.commitmentService.create(createCommitmentRequestDto);
     const occurrences = await this.occurrenceService.create(commitment);
     return { commitment, occurrences };
   }

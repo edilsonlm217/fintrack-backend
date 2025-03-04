@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateService } from './create/create.service';
-import { CreateCommitmentDto } from '../../../common/dto/create-commitment.dto';
+import { CreateCommitmentRequestDto } from 'src/modules/commitment/interfaces/create-commitment-request.dto';
 
 /**
  * Service responsible for handling commitment-related business logic.
@@ -26,7 +26,7 @@ export class CommitmentService {
    * 
    * @returns A promise that resolves to the result of the commitment creation process.
    */
-  async create(createCommitmentDto: CreateCommitmentDto) {
-    return this.createService.process(createCommitmentDto);
+  async create(createCommitmentRequestDto: CreateCommitmentRequestDto) {
+    return this.createService.process(createCommitmentRequestDto);
   }
 }

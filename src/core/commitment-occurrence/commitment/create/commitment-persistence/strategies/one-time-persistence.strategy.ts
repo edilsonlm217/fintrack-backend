@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';  // Importando a função para gerar UUID
 import { CommitmentPersistenceStrategy } from '../interfaces/commitment-persistence-strategy.interface';
-import { CreateCommitmentDto } from 'src/common/dto/create-commitment.dto';
 import { CommitmentRepository } from 'src/database/neo4j/repositories/commitment.repository';
+import { CreateCommitmentRequestDto } from 'src/modules/commitment/interfaces/create-commitment-request.dto';
 
 /**
  * Strategy for persisting one-time financial commitments.
@@ -20,15 +21,16 @@ export class OneTimePersistenceStrategy implements CommitmentPersistenceStrategy
    * 
    * @returns A Promise that resolves to the created commitment stored in the database.
    */
-  async process(createCommitmentDto: CreateCommitmentDto) {
-    return this.commitmentRepository.insertOne({
-      type: createCommitmentDto.type,
-      description: createCommitmentDto.description,
-      amount: createCommitmentDto.amount,
-      due_date: createCommitmentDto.due_date,
-      category: createCommitmentDto.category,
-      subcategory: createCommitmentDto.subcategory,
-      user_id: createCommitmentDto.user_id,
+  async process(createCommitmentRequestDto: CreateCommitmentRequestDto) {
+    const userId = createCommitmentRequestDto.user_id;
+    return this.commitmentRepository.insertOne(userId, {
+      id: uuidv4(),
+      type: createCommitmentRequestDto.type,
+      description: createCommitmentRequestDto.description,
+      amount: createCommitmentRequestDto.amount,
+      due_date: createCommitmentRequestDto.due_date,
+      category: createCommitmentRequestDto.category,
+      subcategory: createCommitmentRequestDto.subcategory,
     });
   }
 }

@@ -14,7 +14,7 @@ export class OccurrenceRepository {
     try {
       const query = `
         UNWIND $createOccurrenceDto AS doc
-        MATCH (c:Commitment { _id: doc.commitment_id })
+        MATCH (c:Commitment { id: doc.commitment_id })
         CREATE (o:Occurrence)
         SET o += doc
         CREATE (c)-[:HAS_OCCURRENCE]->(o)

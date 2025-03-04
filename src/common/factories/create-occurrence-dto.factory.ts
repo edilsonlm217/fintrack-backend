@@ -6,7 +6,7 @@ import { OccurrenceStatus } from 'src/common/enums/occurrence-status.enum';
 export class CreateOccurrenceDtoFactory {
   static createOccurrence(commitment: Commitment, occurrenceDate: string, amount: number): CreateOccurrenceDto {
     return {
-      commitment_id: commitment._id,
+      commitment_id: commitment.id,
       due_date: occurrenceDate,
       amount,
       status: OccurrenceStatus.PENDING,
