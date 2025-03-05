@@ -11,9 +11,4 @@ export enum OccurrenceStatus {
    * The occurrence has been paid.
    */
   PAID = 'paid',
-
-  /**
-   * The occurrence is overdue and has not been paid by the due date.
-   */
-  OVERDUE = 'overdue',
 }
