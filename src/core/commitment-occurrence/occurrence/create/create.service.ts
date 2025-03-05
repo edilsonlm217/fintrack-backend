@@ -26,7 +26,6 @@ export class CreateService {
    */
   async process(commitment: Commitment) {
     const occurrencesToBePersisted = await this.occurrenceGenerationService.process(commitment);
-    const occurrences = await this.occurrencePersistenceService.saveOccurrences(occurrencesToBePersisted);
-    return occurrences;
+    return this.occurrencePersistenceService.saveOccurrences(commitment.id, occurrencesToBePersisted);
   }
 }

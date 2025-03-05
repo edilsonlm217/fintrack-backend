@@ -45,7 +45,6 @@ export class InstallmentGenerationStrategy implements GenerationStrategy {
       });
 
       return CreateOccurrenceDtoFactory.createOccurrence(
-        commitment,
         occurrenceDate,
         installmentAmount,
       );

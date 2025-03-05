@@ -14,12 +14,6 @@ export class CreateOccurrenceDto {
   id: string;
 
   /**
-   * ID of the associated commitment.
-   * This field is a non-empty string.
-   */
-  commitment_id: string;
-
-  /**
    * Due date of the occurrence in the format YYYY-MM-DD.
    * This field is a string.
    */

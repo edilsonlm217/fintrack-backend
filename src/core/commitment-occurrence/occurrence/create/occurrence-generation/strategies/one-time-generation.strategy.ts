@@ -33,7 +33,6 @@ export class OneTimeGenerationStrategy implements GenerationStrategy {
    */
   private generateOneTimeOccurrence(commitment: Commitment) {
     return CreateOccurrenceDtoFactory.createOccurrence(
-      commitment,
       commitment.due_date,
       commitment.amount
     );

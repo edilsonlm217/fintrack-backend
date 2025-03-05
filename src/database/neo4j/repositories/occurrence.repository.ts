@@ -8,20 +8,20 @@ import { Occurrence } from 'src/common/interfaces/occurrence.interface';
 export class OccurrenceRepository {
   constructor(@Inject('NEO4J_DRIVER') private readonly neo4jDriver: Driver) { }
 
-  async insertMany(createOccurrenceDto: Partial<CreateOccurrenceDto>[]): Promise<Occurrence[]> {
+  async insertMany(commitmentId: string, createOccurrenceDto: CreateOccurrenceDto[]): Promise<Occurrence[]> {
     const session = this.neo4jDriver.session();
 
     try {
       const query = `
         UNWIND $createOccurrenceDto AS doc
-        MATCH (c:Commitment { id: doc.commitment_id })
+        MATCH (c:Commitment { id: $commitmentId })
         CREATE (o:Occurrence)
         SET o += doc
         CREATE (c)-[:HAS_OCCURRENCE]->(o)
         RETURN o
       `;
 
-      const result = await session.run(query, { createOccurrenceDto });
+      const result = await session.run(query, { createOccurrenceDto, commitmentId });
 
       return result.records.map(record => record.get('o').properties) as Occurrence[];
     } catch (error) {

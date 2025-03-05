@@ -34,7 +34,6 @@ export class RecurringGenerationStrategy implements GenerationStrategy {
       }).toISODate();
 
       return CreateOccurrenceDtoFactory.createOccurrence(
-        commitment,
         occurrenceDate,
         monthlyAmount
       );

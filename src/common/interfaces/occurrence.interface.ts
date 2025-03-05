@@ -10,11 +10,6 @@ export interface Occurrence {
   id: string;
 
   /**
-   * Identifier for the associated commitment.
-   */
-  commitment_id: string;
-
-  /**
    * Due date of the occurrence in YYYY-MM-DD format.
    */
   due_date: string;

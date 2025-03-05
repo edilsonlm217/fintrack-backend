@@ -9,7 +9,7 @@ import { CreateOccurrenceDto } from 'src/common/dto/create-occurrence.dto';
 export class OccurrencePersistenceService {
   constructor(private readonly occurrenceRepository: OccurrenceRepository) { }
 
-  async saveOccurrences(occurrences: CreateOccurrenceDto[]): Promise<Occurrence[]> {
-    return this.occurrenceRepository.insertMany(occurrences);
+  async saveOccurrences(commitmentId: string, occurrences: CreateOccurrenceDto[]): Promise<Occurrence[]> {
+    return this.occurrenceRepository.insertMany(commitmentId, occurrences);
   }
 }
