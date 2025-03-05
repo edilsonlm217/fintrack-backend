@@ -1,0 +1,57 @@
+# Tipo User com ID único e relação com compromissos
+type User {
+  id: ID!
+  commitments(where: CommitmentFilter): [Commitment!]!
+}
+
+# Tipo Commitment com suas propriedades
+type Commitment {
+  id: ID!
+  type: CommitmentType!
+  description: String!
+  amount: Float!
+  due_date: String
+  start_date: String
+  end_date: String
+  periodicity: CommitmentPeriodicity
+  installments: Int
+  current_installment: Int
+  category: String!
+  subcategory: String
+  occurrences(where: OccurrenceFilter): [Occurrence!]! # Associa as ocorrências ao compromisso
+}
+
+# Tipo Occurrence com suas propriedades
+type Occurrence {
+  id: ID!
+  due_date: String!
+  amount: Float!
+  status: OccurrenceStatus!
+}
+
+# Tipo para filtro de compromissos - Dimensão de Características
+input CommitmentFilter {
+  type: CommitmentType
+  description: String
+  amount: Float
+  periodicity: CommitmentPeriodicity
+  category: String
+  subcategory: String
+}
+
+# Tipo para filtro de ocorrências - Dimensão de Características
+input OccurrenceFilter {
+  status: OccurrenceStatus
+  due_date_range: DateRange
+}
+
+# Tipo para representar um intervalo de datas (Dimensão Temporal)
+input DateRange {
+  start: String
+  end: String
+}
+
+# Queries para buscar compromissos e ocorrências com filtros
+type Query {
+  commitments(where: CommitmentFilter): [Commitment!]! # Filtra compromissos e retorna as ocorrências associadas
+}
