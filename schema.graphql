@@ -1,3 +1,25 @@
+# Enumeração de tipos de compromisso
+enum CommitmentType {
+  recurring
+  one_time
+  installment
+}
+
+# Enumeração de periodicidade de compromisso
+enum CommitmentPeriodicity {
+  weekly
+  biweekly
+  monthly
+  quarterly
+  yearly
+}
+
+# Enumeração de status de ocorrência
+enum OccurrenceStatus {
+  pending
+  paid
+}
+
 # Tipo User com ID único e relação com compromissos
 type User {
   id: ID!
@@ -18,7 +40,7 @@ type Commitment {
   current_installment: Int
   category: String!
   subcategory: String
-  occurrences(where: OccurrenceFilter): [Occurrence!]! # Associa as ocorrências ao compromisso
+  occurrences(where: OccurrenceFilter): [Occurrence!]!
 }
 
 # Tipo Occurrence com suas propriedades
@@ -39,13 +61,13 @@ input CommitmentFilter {
   subcategory: String
 }
 
-# Tipo para filtro de ocorrências - Dimensão de Características
 input OccurrenceFilter {
+  # Tipo para filtro de ocorrências - Dimensão de Características
   status: OccurrenceStatus
+  # Tipo para representar um intervalo de datas (Dimensão Temporal)
   due_date_range: DateRange
 }
 
-# Tipo para representar um intervalo de datas (Dimensão Temporal)
 input DateRange {
   start: String
   end: String
@@ -53,5 +75,6 @@ input DateRange {
 
 # Queries para buscar compromissos e ocorrências com filtros
 type Query {
-  commitments(where: CommitmentFilter): [Commitment!]! # Filtra compromissos e retorna as ocorrências associadas
+  # Buscando compromissos de um usuário específico
+  getCommitmentsByUser(userId: ID!, where: CommitmentFilter): [Commitment!]!
 }
