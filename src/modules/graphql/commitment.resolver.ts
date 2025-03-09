@@ -30,10 +30,24 @@ export class CommitmentResolver {
       query += ` AND c.description CONTAINS $description`;
       params.description = commitmentFilter.description;
     }
+
     if (commitmentFilter?.amount) {
-      query += ` AND c.amount = $amount`;
-      params.amount = commitmentFilter.amount;
+      const { equals, greaterThan, lessThan } = commitmentFilter.amount;
+
+      if (equals !== undefined) {
+        query += ` AND c.amount = $amountEquals`;
+        params.amountEquals = equals;
+      }
+      if (greaterThan !== undefined) {
+        query += ` AND c.amount > $amountGreaterThan`;
+        params.amountGreaterThan = greaterThan;
+      }
+      if (lessThan !== undefined) {
+        query += ` AND c.amount < $amountLessThan`;
+        params.amountLessThan = lessThan;
+      }
     }
+
     if (commitmentFilter?.periodicity) {
       query += ` AND c.periodicity = $periodicity`;
       params.periodicity = commitmentFilter.periodicity;
@@ -58,10 +72,29 @@ export class CommitmentResolver {
       query += ` AND o.status = $status`;
       params.status = occurrenceFilter.status;
     }
+
     if (occurrenceFilter?.due_date_range?.start && occurrenceFilter?.due_date_range?.end) {
       query += ` AND o.due_date >= $due_date_start AND o.due_date <= $due_date_end`;
       params.due_date_start = occurrenceFilter.due_date_range.start;
       params.due_date_end = occurrenceFilter.due_date_range.end;
+    }
+
+    // Filtros de Amount
+    if (occurrenceFilter?.amount) {
+      const { equals, greaterThan, lessThan } = occurrenceFilter.amount;
+
+      if (equals !== undefined) {
+        query += ` AND o.amount = $amountEquals`;
+        params.amountEquals = equals;
+      }
+      if (greaterThan !== undefined) {
+        query += ` AND o.amount > $amountGreaterThan`;
+        params.amountGreaterThan = greaterThan;
+      }
+      if (lessThan !== undefined) {
+        query += ` AND o.amount < $amountLessThan`;
+        params.amountLessThan = lessThan;
+      }
     }
 
     // Agregar ocorrências e filtrar compromissos sem ocorrências
