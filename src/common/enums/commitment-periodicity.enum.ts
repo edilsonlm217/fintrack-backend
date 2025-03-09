@@ -1,3 +1,5 @@
+import { registerEnumType } from "@nestjs/graphql";
+
 /**
  * Enum representing the different periodicities for financial commitments.
  * Used to define the frequency at which a commitment is repeated.
@@ -33,3 +35,7 @@ export enum CommitmentPeriodicity {
    */
   YEARLY = 'yearly',
 }
+
+registerEnumType(CommitmentPeriodicity, {
+  name: 'CommitmentPeriodicity',
+});

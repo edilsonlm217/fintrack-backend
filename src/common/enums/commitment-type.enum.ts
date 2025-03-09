@@ -1,3 +1,5 @@
+import { registerEnumType } from '@nestjs/graphql';
+
 /**
  * Enum representing different types of financial commitments.
  */
@@ -17,3 +19,7 @@ export enum CommitmentType {
    */
   ONE_TIME = 'one_time',
 }
+
+registerEnumType(CommitmentType, {
+  name: 'CommitmentType',
+});

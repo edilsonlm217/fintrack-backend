@@ -1,3 +1,5 @@
+import { registerEnumType } from "@nestjs/graphql";
+
 /**
  * Enum representing the status of an occurrence.
  */
@@ -12,3 +14,7 @@ export enum OccurrenceStatus {
    */
   PAID = 'paid',
 }
+
+registerEnumType(OccurrenceStatus, {
+  name: 'OccurrenceStatus',
+});
